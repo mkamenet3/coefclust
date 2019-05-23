@@ -25,7 +25,7 @@ load("SoutheastFakeData")
 str(SE_FakeData)
 ```
 
-Next, set initial `x` and `y` inputs, the longitude and latitude, and **JUNHO: what is MR and M?**:
+Next, set initial `x` and `y` inputs, the longitude and latitude, maximum radius (`MR`) in km, and number of simulations (`M`):
 
 ```{r}
 y <- SE_FakeData$y

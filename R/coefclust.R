@@ -296,7 +296,7 @@ DC.TStg1.SL <- function(y, X, cdataL, ID, overlap) {
 #'@title DC.TStg2.SL
 #'@description  Detect the cluster in the simple linear regression for given potential centroids via the 2nd stage in Two-stage detection: the same slope but different intercept.
 #'@param y The input data(as a vector)
-#'@param x The input data(as a natrix), N-by-2 matrix
+#'@param x The input data(as a matrix), N-by-2 matrix
 #'@param cdataL Pre-defined cdata list which is from \code{List.C.Data(DMatrix,MR)}
 #'@param ID Indices for potential centroids
 #'@param overlap Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters

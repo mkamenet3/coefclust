@@ -1,24 +1,13 @@
 
-###################################################################################################
-# Test.Cluster.Simul.SL(y, X, cdataL, M, ID, overlap)                                         #####
-### Find and Test the Cluster in the Simple Linear Regression for given potential centroids 
-### via the Simultaneous detection.
-### y: The input data(in Vector Format)
-### X: The input data(in Matrix Format)
-### cdataL: Pre-defined cdata list which is from List.C.Data(DMatrix,MR)
-### M : number of simulations
-### ID: Indices for potential centroids
-### overlap: Boolean which is TRUE for overlapping clusters / FALSE for non-overlapping clusters
-
 #'@title Test.Cluster.Simul.SL
 #'@description Find and test the cluster in the simple linear regression for given potential centroids via the simultaneous detection.
 #'@param y The input data(as a vector)
-#'@param x The input data(as a natrix)
+#'@param x The input data(as a matrix)
 #'@param cdataL Pre-defined cdata list which is from \code{List.C.Data(DMatrix,MR)}
 #'@param M number of simulations
 #'@param ID Indices for potential centroids
 #'@param overlap Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters
-#'@return Most likely cluster and associated p-value.
+#'@return Most likely cluster, maximum F-statistic (of all simulations), and associated p-value.
 #'@export
 Test.Cluster.Simul.SL <- function(y, X, cdataL, M, ID, overlap) {
   T <- rep(NA,M+1)
@@ -56,18 +45,19 @@ Test.Cluster.Simul.SL <- function(y, X, cdataL, M, ID, overlap) {
 }  
 
 
-###################################################################################################
-# Find.Clusters.Simul(y, X, long, lat, MR, M, overlap, alpha)                                 #####
-### Find multiple clusters sequentially via SImulataneous detection.
-### Find and Test the Cluster in the Simple Linear Regression for given potential centroids 
-### via the Simultaneous detection.
-### y: The input data(in Vector Format)
-### X: The input data(in Matrix Format)
-### long: longitude
-### lat:  latitude
-### M : number of simulations
-### overlap: Boolean which is TRUE for overlapping clusters / FALSE for non-overlapping clusters
-### alpha : significant level
+#'@title Find.Clusters.Simul
+#'@description Find multiple clusters sequentially via simulataneous detection. 
+#'Find and test the cluster in the simple linear regression for given potential centroids via the simultaneous detection.
+#'@param y The input data(as a vector)
+#'@param x The input data(as a matrix)
+#'@param long longitude
+#'@param lat latitude
+#'@param MR Maximum radius
+#'@param M number of simulations
+#'@param overlap  Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters
+#'@param alpha significance level
+#'@return list of cluster, coefficient
+#'@export
 Find.Clusters.Simul <- function(y, X, long, lat, MR, M, overlap, alpha) {
   ID <- 1:length(y)                
   N <- dim(X)[1]; p <- dim(X)[2]   
@@ -78,7 +68,7 @@ Find.Clusters.Simul <- function(y, X, long, lat, MR, M, overlap, alpha) {
   b_tmp <- solve(t(X)%*%X)%*%t(X)%*%y
   coef_tmp <- c(b_tmp,rep(NA,length(b_tmp)))
   
-  print("Finding 1st Cluster")
+  message("Finding 1st Cluster")
   time_tmp <- system.time(C_tmp <- Test.Cluster.Simul.SL(y, X, cdataL, M, ID, overlap))
   Clusters <- c(C_tmp,time_tmp[3]/60)
   pval_tmp <- C_tmp[5]               
@@ -102,7 +92,7 @@ Find.Clusters.Simul <- function(y, X, long, lat, MR, M, overlap, alpha) {
   y_tmp <- y - X_cls%*%b_tmp[(p+1):(2*p)] 
   
   while (pval_tmp < alpha) {
-    print(paste("Finding ", n_cls + 1, "th Cluster", sep=""))
+    message(paste("Finding ", n_cls + 1, "th Cluster", sep=""))
     time_tmp <- system.time(C_tmp <- Test.Cluster.Simul.SL(y_tmp, X, cdataL, M, ID_tmp, overlap))
     Clusters <- rbind(Clusters,c(C_tmp,time_tmp[3]/60))
     pval_tmp <- C_tmp[5]
