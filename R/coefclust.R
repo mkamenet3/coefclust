@@ -1,12 +1,10 @@
 
-###################################################################################################
-# List.C.Data(DMatrix,MR)                                                                     #####
-### Construct a list of all possible clusters where r <= MR for each center.
-### DMatrix: distance matrix
-### MR: The Max Radius
-
-#'Construct  a list of all possible clusters where r <= MR for each center.
-#'
+#'@title List.C.Data
+#'@description Construct  a list of all possible clusters where r <= MR for each center.
+#'@param DMatrix Distance matrix
+#'@param MR Maximum radius.
+#'@return Matrix
+#'@export
 List.C.Data <- function(DMatrix,MR) {
   cdata <- list()
   N <- dim(DMatrix)[1]
@@ -20,11 +18,12 @@ List.C.Data <- function(DMatrix,MR) {
 }
 
 
-###################################################################################################
-# cum.sum.scalar(yc,xc), cum.sum.scalar1(xc), cum.sum.scalar2(yc, xc)                         #####
-### Compute cumulative sums.
-### yc: y vector
-### xc: x vector
+#'@title cum.sum.scalar
+#'@description Compute cumulative sums.
+#'@param yc y vector
+#'@param xc x vector
+#'@return a list
+#'@export
 cum.sum.scalar <- function(yc, xc) {
   n <- length(yc)
   y1 <- rep(NA,n); y2 <- rep(NA,n)
@@ -43,6 +42,11 @@ cum.sum.scalar <- function(yc, xc) {
   return(list(y1 = y1, y2 = y2, x1 = x1, x2 = x2, xy = xy, nc = 1:n))
 }
 
+#'@title cum.sum.scalar1
+#'@description TODO
+#'@param yc y vector
+#'@param xc x vector
+#'@return a list
 cum.sum.scalar1 <- function(xc) {
   n <- length(xc)  
   x1 <- rep(NA,n); x2 <- rep(NA,n)
@@ -54,6 +58,12 @@ cum.sum.scalar1 <- function(xc) {
   }
   return(list(x1 = x1, x2 = x2, nc = 1:n))
 }
+
+#'@title cum.sum.scalar2
+#'@description TODO
+#'@param yc y vector
+#'@param xc x vector
+#'@return a list
 
 cum.sum.scalar2 <- function(yc, xc) {
   n <- length(yc)
@@ -71,15 +81,17 @@ cum.sum.scalar2 <- function(yc, xc) {
 }
 
 
-###################################################################################################
-# DC.Simul.SL(y,X,cdataL,ID,overlap)                                                          #####
-### Detect the Cluster in the Simple Linear Regression for given potential centroids 
-### via the Simultaneous detection.
-### y: The input data(in Vector Format)
-### X: The input data(in Matrix Format)
-### cdataL: Pre-defined cdata list which is from List.C.Data(DMatrix,MR)
-### ID: Indices for potential centroids
-### overlap: Boolean which is TRUE for overlapping clusters / FALSE for non-overlapping clusters
+#'@title DC.Simul.SL
+#'@description Detect the Cluster in the Simple Linear Regression for given potential centroids.
+#'@param y The input data(as a vector)
+#'@param x The input data(as a matrix)
+#'@param cdataL Pre-defined cdata list which is from List.C.Data(DMatrix,MR)
+#'@param ID Indices for potential centroids
+#'@param overlap Boolean which is TRUE for overlapping clusters / FALSE for non-overlapping clusters
+#'@return List of most likely clusters
+#'@export
+#'
+
 DC.Simul.SL <- function(y, X, cdataL, ID, overlap) {
   mlc <- NULL
   N <- dim(X)[1]; p <- dim(X)[2]
@@ -136,18 +148,18 @@ DC.Simul.SL <- function(y, X, cdataL, ID, overlap) {
 }
 
 
-###################################################################################################
-# DC.Simul.SL2(y, x, cdataL, sum_x1, sum_x2, cs.xxL, ID, overlap)                             #####
-### Detect the Cluster in the Simple Linear Regression for given potential centroids 
-### via the Simultaneous detection.
-### y: The input data(in Vector Format)
-### x: The input data(in Vector Format)
-### cdataL: Pre-defined cdata list which is from List.C.Data(DMatrix,MR)
-### sum_x1: Pre-computed sum(x_i)
-### sum_x2: Pre-computed sum(x_i^2)
-### cs.xxL: Pre-computed cs.xx list which is from cum.sum.scalar1(xc)
-### ID: Indices for potential centroids
-### overlap: Boolean which is TRUE for overlapping clusters / FALSE for non-overlapping clusters
+#'@title DC.Simul.SL2
+#'@description Detect the cluster in the simple linear regression for given potential centroids via simultaneous detection
+#'@param y The input data(as a vector)
+#'@param x The input data(as a matrix)
+#'@param cdataL Pre-defined cdata list which is from List.C.Data(DMatrix,MR)
+#'@param sum_x1 Pre-computed \eqn{\sum(x_i)}
+#'@param sum_x2 Pre-computed \eqn{\sum(x_i^2)}
+#'@param cs.xxL Pre-computed cs.xx list which is from \code{cum.sum.scalar1(xc)}
+#'@param ID Indices for potential centroids
+#'@param overlap  Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters
+#'@return List of most likely clusters
+#'@export
 DC.Simul.SL2 <- function(y, x, cdataL, sum_x1, sum_x2, cs.xxL, ID, overlap) {
   mlc <- NULL
   N <- length(y); p <- 2
@@ -206,15 +218,15 @@ DC.Simul.SL2 <- function(y, x, cdataL, sum_x1, sum_x2, cs.xxL, ID, overlap) {
 }
 
 
-###################################################################################################
-# DC.TStg1.SL(y,X,cdataL,ID,overlap)                                                          #####
-### Detect the Cluster in the Simple Linear Regression for given potential centroids 
-### via the 1st stage in Two-stage detection: different slope and different intercept.
-### y: The input data(in Vector Format)
-### X: The input data(in Matrix Format)
-### cdataL: Pre-defined cdata list which is from List.C.Data(DMatrix,MR)
-### ID: Indices for potential centroids
-### overlap: Boolean which is TRUE for overlapping clusters / FALSE for non-overlapping clusters
+#'@title DC.TStg1.SL
+#'@description Detect the cluster in the simple linear regression for given potential centroids via the 1st stage in Two-stage detection: different slope and different intercept.
+#'@param y The input data(as a vector)
+#'@param x The input data(as a matrix)
+#'@param cdataL Pre-defined cdata list which is from \code{List.C.Data(DMatrix,MR)}
+#'@param ID Indices for potential centroids
+#'@param overlap  Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters
+#'@return List of most likely clusters
+#'@export
 DC.TStg1.SL <- function(y, X, cdataL, ID, overlap) {
   mlc <- NULL
   N <- dim(X)[1]; p <- dim(X)[2]
@@ -280,15 +292,17 @@ DC.TStg1.SL <- function(y, X, cdataL, ID, overlap) {
 }
 
 
-###################################################################################################
-# DC.TStg2.SL(y,X,cdataL,ID,overlap)                                                          #####
-### Detect the Cluster in the Simple Linear Regression for given potential centroids 
-### via the 2nd stage in Two-stage detection: the same slope but different intercept.
-### y: The input data(in Vector Format)
-### X: The input data(in Matrix Format), N-by-2 matrix
-### cdataL: Pre-defined cdata list which is from List.C.Data(DMatrix,MR)
-### ID: Indices for potential centroids
-### overlap: Boolean which is TRUE for overlapping clusters / FALSE for non-overlapping clusters
+
+#'@title DC.TStg2.SL
+#'@description  Detect the cluster in the simple linear regression for given potential centroids via the 2nd stage in Two-stage detection: the same slope but different intercept.
+#'@param y The input data(as a vector)
+#'@param x The input data(as a natrix), N-by-2 matrix
+#'@param cdataL Pre-defined cdata list which is from \code{List.C.Data(DMatrix,MR)}
+#'@param ID Indices for potential centroids
+#'@param overlap Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters
+#'@return List of most likely clusters
+#'@export
+
 DC.TStg2.SL <- function(y, X, cdataL, ID, overlap) {
   mlc <- NULL
   N <- dim(X)[1]; p <- dim(X)[2]
