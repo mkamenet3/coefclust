@@ -1,0 +1,63 @@
+---
+title: "Introduction to coefclust"
+author: "Junho Lee, Maria Kamenetsky"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to coefclust}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+First load the `coefclust` package.
+
+```{r}
+library(coefclust)
+```
+
+Next load the dataset that ships with the package, *SoutheastFakeData*:
+
+```{r}
+load("SoutheastFakeData")
+str(SE_FakeData)
+```
+
+Next, set initial `x` and `y` inputs, the longitude and latitude, and **JUNHO: what is MR and M?**:
+
+```{r}
+y <- SE_FakeData$y
+X <- cbind(rep(1,length(y)), SE_FakeData$x)
+long <- SE_FakeData$long; lat <- SE_FakeData$lat
+MR <- 300
+M <- 1000
+```
+
+
+
+## Find Multiple Clusters Sequentially via the Simulatneous Detection 
+
+```{r}
+Clusters_sim <- Find.Clusters.Simul(y, X, long, lat, MR, M, overlap=TRUE, alpha=0.05)
+```
+
+
+## Find Multiple Clusters Sequentially via the Two--Stage Detection 
+
+
+```{r}
+Clusters_ts1 <- Find.Clusters.TStg1(y, X, long, lat, MR, M, overlap=TRUE, alpha=0.05)
+Clusters_ts2 <- Find.Clusters.TStg2(y, X, long, lat, MR, M, Cls1st=Clusters_ts1, overlap=TRUE, alpha=0.05)
+
+
+Clusters_sim$Clusters
+cbind(SE_FakeData[Clusters_sim$Clusters[,1],1:2],Clusters_sim$Clusters)
+Clusters_sim$Coef
+
+Clusters_ts2$Clusters
+cbind(SE_FakeData[Clusters_ts2$Clusters[,1],1:2],Clusters_ts2$Clusters)
+Clusters_ts2$Coef
+length(Clusters_ts2$clsL)
+```
