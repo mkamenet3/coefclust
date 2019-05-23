@@ -8,6 +8,12 @@ sampled over time, with heterogeneity in regression coefficients across both
 space and time. 
 Depends: R (>= 3.5.2)
 Imports:
+    geosphere,
+    stats,
+    grDevices,
+    methods,
+    graphics,
+    utils
 VignetteBuilder: knitr
 License: GPL (>=2)
 Encoding: UTF-8
