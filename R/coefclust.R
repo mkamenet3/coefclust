@@ -4,7 +4,6 @@
 #'@param DMatrix Distance matrix
 #'@param MR Maximum radius.
 #'@return Matrix
-#'@export
 List.C.Data <- function(DMatrix,MR) {
   cdata <- list()
   N <- dim(DMatrix)[1]
