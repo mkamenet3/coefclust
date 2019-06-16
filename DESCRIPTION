@@ -1,5 +1,5 @@
 Package: coefclust
-Title: Clustered spatio-temporal varying coefficient regression modeling. 
+Title: Clustered spatio-temporal varying coefficient regression modeling
 Version: 0.1
 Authors@R: c(person("Junho", "Lee", email="email",role = c("aut", "cre")),
             person("Maria", "Kamenetsky", email="maria.kamenetsky@gmail.com",role = "aut"))

@@ -54,7 +54,7 @@ Find.Clusters.TStg1 <- function(y, X, long, lat, MR, M, overlap, alpha) {
   ID <- 1:length(y)
   N <- dim(X)[1]; p <- dim(X)[2]
   LL <- cbind(long, lat)
-  DMatrix <- distm(LL)/1000
+  DMatrix <- geosphere::distm(LL)/1000
   cdataL <- List.C.Data(DMatrix,MR)
 
   b_tmp <- solve(t(X)%*%X)%*%t(X)%*%y
@@ -71,7 +71,7 @@ Find.Clusters.TStg1 <- function(y, X, long, lat, MR, M, overlap, alpha) {
   clsL <- list()    # a list of indicator for each cluster
   n_cls <- 1        # number of clusters
 
-  d_tmp <- distm(cbind(long,lat), c(long[cent_tmp],lat[cent_tmp]))/1000
+  d_tmp <- geosphere::distm(cbind(long,lat), c(long[cent_tmp],lat[cent_tmp]))/1000
   clsL[[n_cls]]  <- as.vector(d_tmp <= r_tmp)
   if (overlap) {
     ID_tmp <- ID[ID != cent_tmp]
@@ -95,8 +95,8 @@ Find.Clusters.TStg1 <- function(y, X, long, lat, MR, M, overlap, alpha) {
 
     n_cls <- n_cls + 1
 
-    d_tmp1 <- distm(cbind(long,lat), c(long[cent_tmp],lat[cent_tmp]))/1000
-    d_tmp2 <- distm(cbind(long[ID_tmp],lat[ID_tmp]), c(long[cent_tmp],lat[cent_tmp]))/1000
+    d_tmp1 <- geosphere::distm(cbind(long,lat), c(long[cent_tmp],lat[cent_tmp]))/1000
+    d_tmp2 <- geosphere::distm(cbind(long[ID_tmp],lat[ID_tmp]), c(long[cent_tmp],lat[cent_tmp]))/1000
     clsL[[n_cls]]  <- as.vector(d_tmp1 <= r_tmp)
     if (overlap) {
       ID_tmp <- ID_tmp[ID_tmp != cent_tmp]
@@ -206,7 +206,7 @@ Find.Clusters.TStg2 <- function(y, X, long, lat, MR, M, Cls1st, overlap, alpha) 
   ID <- 1:length(y)
   N <- dim(X)[1]; p <- dim(X)[2]
   LL <- cbind(long, lat)
-  DMatrix <- distm(LL)/1000
+  DMatrix <- geosphere::distm(LL)/1000
   cdataL <- List.C.Data(DMatrix,MR)
 
   clsL <- list()
@@ -219,8 +219,8 @@ Find.Clusters.TStg2 <- function(y, X, long, lat, MR, M, Cls1st, overlap, alpha) 
   for (j in 1:n_cls1) {
     cent_tmp <- Cls1st$Clusters[j,1]
     r_tmp <- Cls1st$Clusters[j,2]
-    d_tmp1 <- distm(cbind(long,lat), c(long[cent_tmp],lat[cent_tmp]))/1000
-    d_tmp2 <- distm(cbind(long[ID_tmp],lat[ID_tmp]), c(long[cent_tmp],lat[cent_tmp]))/1000
+    d_tmp1 <- geosphere::distm(cbind(long,lat), c(long[cent_tmp],lat[cent_tmp]))/1000
+    d_tmp2 <- geosphere::distm(cbind(long[ID_tmp],lat[ID_tmp]), c(long[cent_tmp],lat[cent_tmp]))/1000
 
 	clsL[[j]]  <- as.vector(d_tmp1 <= r_tmp)
     if (overlap) {
@@ -245,8 +245,8 @@ Find.Clusters.TStg2 <- function(y, X, long, lat, MR, M, Cls1st, overlap, alpha) 
 
     n_cls <- n_cls + 1
 
-	d_tmp1 <- distm(cbind(long,lat), c(long[cent_tmp],lat[cent_tmp]))/1000
-    d_tmp2 <- distm(cbind(long[ID_tmp],lat[ID_tmp]), c(long[cent_tmp],lat[cent_tmp]))/1000
+	d_tmp1 <- geosphere::distm(cbind(long,lat), c(long[cent_tmp],lat[cent_tmp]))/1000
+    d_tmp2 <- geosphere::distm(cbind(long[ID_tmp],lat[ID_tmp]), c(long[cent_tmp],lat[cent_tmp]))/1000
     clsL[[n_cls]]  <- as.vector(d_tmp1 <= r_tmp)
     if (overlap) {
       ID_tmp <- ID_tmp[ID_tmp != cent_tmp]
