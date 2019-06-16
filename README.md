@@ -1,4 +1,4 @@
-# coefclust
+# coefclust: Detecting clustered spatio-temporal varying coefficients in regression models
 
 This repository contains the `R` package `coefclust` based on "Clustered
 Spatio-Temporal Varying Coefficient Regression Model" (Lee, Gangnon, Zhu,
@@ -15,5 +15,12 @@ Please report any bugs or modifications to issues
 
 Required packages include:
 
-TODO
+- `geosphere` (>=1.5)
 
+
+To download the latest version of `coefclust`:
+
+```R
+library("devtools")
+devtool::install_github("mkamenet3/coefclust")
+```

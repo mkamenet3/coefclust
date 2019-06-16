@@ -1,17 +1,18 @@
 Package: coefclust
-Title: Clustered spatio-temporal varying coefficient regression modeling. 
+Title: Clustered spatio-temporal varying coefficient regression modeling
 Version: 0.1
 Authors@R: c(person("Junho", "Lee", email="email",role = c("aut", "cre")),
             person("Maria", "Kamenetsky", email="maria.kamenetsky@gmail.com",role = "aut"))
 Description: Varying-coefficient regression method for spatial data repeatedly sampled over time, with heterogeneity in regression coefficients across both space and time. 
-Depends: R (>= 3.5.2)
+Depends: R (>= 3.5)
 Imports:
     geosphere,
     stats,
     grDevices,
     methods,
     graphics,
-    utils
+    utils,
+    knitr
 VignetteBuilder: knitr
 License: GPL (>=2)
 Encoding: UTF-8

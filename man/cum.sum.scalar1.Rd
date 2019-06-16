@@ -8,8 +8,6 @@ cum.sum.scalar1(xc)
 }
 \arguments{
 \item{xc}{x vector}
-
-\item{yc}{y vector}
 }
 \value{
 a list
