@@ -60,9 +60,10 @@ Find.Clusters.TStg1 <- function(y, X, long, lat, MR, M, overlap, alpha) {
   b_tmp <- solve(t(X)%*%X)%*%t(X)%*%y
   coef_tmp <- c(b_tmp,rep(NA,length(b_tmp)))
 
-  message("Finding 1st Cluster")
+  print("Finding 1st Cluster")
   time_tmp <- system.time(C_tmp <- Test.Cluster.TStg1.SL(y, X, cdataL, M, ID, overlap))
-  Clusters <- c(C_tmp,time_tmp[3]/60)
+  # Clusters <- c(C_tmp,time_tmp[3]/60)
+  Clusters <- rbind(c(C_tmp,time_tmp[3]/60), NULL)    # Update: 2019/06/16
   pval_tmp <- C_tmp[5]
   cent_tmp <- C_tmp[1]
   r_tmp    <- C_tmp[2]
@@ -85,7 +86,7 @@ Find.Clusters.TStg1 <- function(y, X, long, lat, MR, M, overlap, alpha) {
   y_tmp <- y - X_cls%*%b_tmp[(p+1):(2*p)]
 
   while (pval_tmp < alpha) {
-    message(paste("Finding ", n_cls + 1, "th Cluster", sep=""))
+    print(paste("Finding ", n_cls + 1, "th Cluster", sep=""))
     time_tmp <- system.time(C_tmp <- Test.Cluster.TStg1.SL(y_tmp, X, cdataL, M, ID_tmp, overlap))
     Clusters <- rbind(Clusters,c(C_tmp,time_tmp[3]/60))
     pval_tmp <- C_tmp[5]
@@ -106,7 +107,7 @@ Find.Clusters.TStg1 <- function(y, X, long, lat, MR, M, overlap, alpha) {
     X_cls <- X*(clsL[[n_cls]])
     W <- cbind(X,X_cls)
     b_tmp <- solve(t(W)%*%W)%*%t(W)%*%y_tmp
-	coef_tmp <- cbind(coef_tmp,b_tmp)
+    coef_tmp <- cbind(coef_tmp,b_tmp)
     y_tmp <- y_tmp - X_cls%*%b_tmp[(p+1):(2*p)]
   }
 
@@ -118,13 +119,16 @@ Find.Clusters.TStg1 <- function(y, X, long, lat, MR, M, overlap, alpha) {
     Clusters <- c(Clusters, n_obs=n_obs)
   }
 
-  Coef <- coef_tmp[1:p,1:n_cls]
+  # Coef <- coef_tmp[1:p,1:n_cls]
+  Coef <- cbind(coef_tmp[1:p,1:n_cls],NULL)    # Update: 2019/06/16
   coef_names <- c("beta_0","beta_1")
-  for (j in 1:(n_cls-1)) {
-    Coef <- rbind(Coef,
-                  cbind(matrix(rep(NA,p*j),p,j),
-                        matrix(rep(coef_tmp[(p+1):(2*p),(j+1)],(n_cls-j)),p,(n_cls-j))))
-    coef_names <- c(coef_names, paste("theta_", j, ",", 0:(p-1), sep=""))
+  if (n_cls > 1) {                             # Update: 2019/06/16
+    for (j in 1:(n_cls-1)) {
+      Coef <- rbind(Coef,
+                    cbind(matrix(rep(NA,p*j),p,j),
+                          matrix(rep(coef_tmp[(p+1):(2*p),(j+1)],(n_cls-j)),p,(n_cls-j))))
+      coef_names <- c(coef_names, paste("theta_", j, ",", 0:(p-1), sep=""))
+    }
   }
   colnames(Coef) <- 0:(n_cls-1)
   rownames(Coef) <- coef_names
