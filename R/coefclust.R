@@ -44,7 +44,6 @@ cum.sum.scalar <- function(yc, xc) {
 
 #'@title cum.sum.scalar1
 #'@description TODO
-#'@param yc y vector
 #'@param xc x vector
 #'@return a list
 cum.sum.scalar1 <- function(xc) {
