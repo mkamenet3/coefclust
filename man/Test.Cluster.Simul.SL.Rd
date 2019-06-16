@@ -9,6 +9,8 @@ Test.Cluster.Simul.SL(y, X, cdataL, M, ID, overlap)
 \arguments{
 \item{y}{The input data(as a vector)}
 
+\item{X}{The input data(as a matrix)}
+
 \item{cdataL}{Pre-defined cdata list which is from \code{List.C.Data(DMatrix,MR)}}
 
 \item{M}{number of simulations}
@@ -16,8 +18,6 @@ Test.Cluster.Simul.SL(y, X, cdataL, M, ID, overlap)
 \item{ID}{Indices for potential centroids}
 
 \item{overlap}{Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters}
-
-\item{x}{The input data(as a matrix)}
 }
 \value{
 Most likely cluster, maximum F-statistic (of all simulations), and associated p-value.

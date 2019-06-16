@@ -11,7 +11,8 @@ Imports:
     grDevices,
     methods,
     graphics,
-    utils
+    utils,
+    knitr
 VignetteBuilder: knitr
 License: GPL (>=2)
 Encoding: UTF-8

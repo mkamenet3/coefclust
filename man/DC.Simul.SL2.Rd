@@ -4,12 +4,12 @@
 \alias{DC.Simul.SL2}
 \title{DC.Simul.SL2}
 \usage{
-DC.Simul.SL2(y, x, cdataL, sum_x1, sum_x2, cs.xxL, ID, overlap)
+DC.Simul.SL2(y, X, cdataL, sum_x1, sum_x2, cs.xxL, ID, overlap)
 }
 \arguments{
 \item{y}{The input data(as a vector)}
 
-\item{x}{The input data(as a matrix)}
+\item{X}{The input data(as a matrix)}
 
 \item{cdataL}{Pre-defined cdata list which is from List.C.Data(DMatrix,MR)}
 

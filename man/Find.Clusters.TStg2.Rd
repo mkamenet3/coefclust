@@ -9,6 +9,8 @@ Find.Clusters.TStg2(y, X, long, lat, MR, M, Cls1st, overlap, alpha)
 \arguments{
 \item{y}{The input data(as a vector)}
 
+\item{X}{The input data(as a matrix)}
+
 \item{long}{longitude}
 
 \item{lat}{latitude}
@@ -22,8 +24,6 @@ Find.Clusters.TStg2(y, X, long, lat, MR, M, Cls1st, overlap, alpha)
 \item{overlap}{Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters}
 
 \item{alpha}{significance level}
-
-\item{x}{The input data(as a matrix)}
 }
 \value{
 list of cluster, coefficient

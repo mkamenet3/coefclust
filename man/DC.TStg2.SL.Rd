@@ -9,13 +9,13 @@ DC.TStg2.SL(y, X, cdataL, ID, overlap)
 \arguments{
 \item{y}{The input data(as a vector)}
 
+\item{X}{The input data(as a matrix), N-by-2 matrix}
+
 \item{cdataL}{Pre-defined cdata list which is from \code{List.C.Data(DMatrix,MR)}}
 
 \item{ID}{Indices for potential centroids}
 
 \item{overlap}{Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters}
-
-\item{x}{The input data(as a matrix), N-by-2 matrix}
 }
 \value{
 List of most likely clusters

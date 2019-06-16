@@ -9,6 +9,8 @@ Find.Clusters.TStg1(y, X, long, lat, MR, M, overlap, alpha)
 \arguments{
 \item{y}{The input data(as a vector)}
 
+\item{X}{The input data(as a matrix)}
+
 \item{long}{longitude}
 
 \item{lat}{latitude}
@@ -20,14 +22,12 @@ Find.Clusters.TStg1(y, X, long, lat, MR, M, overlap, alpha)
 \item{overlap}{Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters}
 
 \item{alpha}{significance level}
-
-\item{x}{The input data(as a matrix)}
 }
 \value{
 list of cluster, coefficient
 }
 \description{
 Find multiple clusters sequentially via simulataneous detection.
-Find and test the cluster in the simple linear regression for given potential centroids via 
+Find and test the cluster in the simple linear regression for given potential centroids via
 the 1st stage in Two-stage detection: different slope and different intercept.
 }
