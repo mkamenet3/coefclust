@@ -177,7 +177,7 @@ Test.Cluster.TStg2.SL <- function(y, X, cdataL, M, ID, overlap) {
 
 
 #'@title Find.Clusters.TStg2
-#'@description Find multiple clusters sequentially via SImulataneous detection.
+#'@description Find multiple clusters sequentially via Simulataneous detection.
 #' Find and test the cluster in the simple linear regression for given potential centroids via the 2nd stage in Two-stage detection: the same slope but different intercept.
 #'@param y The input data(as a vector)
 #'@param X The input data(as a matrix)
@@ -189,6 +189,7 @@ Test.Cluster.TStg2.SL <- function(y, X, cdataL, M, ID, overlap) {
 #'@param overlap  Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters
 #'@param alpha significance level
 #'@return list of cluster, coefficient
+#'@export
 
 Find.Clusters.TStg2 <- function(y, X, long, lat, MR, M, Cls1st, overlap, alpha) {
   ID <- 1:length(y)
