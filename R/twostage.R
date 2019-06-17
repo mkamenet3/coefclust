@@ -189,6 +189,7 @@ Test.Cluster.TStg2.SL <- function(y, X, cdataL, M, ID, overlap) {
 #'@param overlap  Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters
 #'@param alpha significance level
 #'@return list of cluster, coefficient
+#'@export
 
 Find.Clusters.TStg2 <- function(y, X, long, lat, MR, M, Cls1st, overlap, alpha) {
   ID <- 1:length(y)
