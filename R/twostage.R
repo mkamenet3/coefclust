@@ -60,7 +60,7 @@ Find.Clusters.TStg1 <- function(y, X, long, lat, MR, M, overlap, alpha) {
   b_tmp <- solve(t(X)%*%X)%*%t(X)%*%y
   coef_tmp <- c(b_tmp,rep(NA,length(b_tmp)))
 
-  print("Finding 1st Cluster")
+  message("Finding 1st Cluster")
   time_tmp <- system.time(C_tmp <- Test.Cluster.TStg1.SL(y, X, cdataL, M, ID, overlap))
   # Clusters <- c(C_tmp,time_tmp[3]/60)
   Clusters <- rbind(c(C_tmp,time_tmp[3]/60), NULL)    # Update: 2019/06/16
@@ -86,7 +86,7 @@ Find.Clusters.TStg1 <- function(y, X, long, lat, MR, M, overlap, alpha) {
   y_tmp <- y - X_cls%*%b_tmp[(p+1):(2*p)]
 
   while (pval_tmp < alpha) {
-    print(paste("Finding ", n_cls + 1, "th Cluster", sep=""))
+    message(paste("Finding ", n_cls + 1, "th Cluster", sep=""))
     time_tmp <- system.time(C_tmp <- Test.Cluster.TStg1.SL(y_tmp, X, cdataL, M, ID_tmp, overlap))
     Clusters <- rbind(Clusters,c(C_tmp,time_tmp[3]/60))
     pval_tmp <- C_tmp[5]
@@ -112,12 +112,14 @@ Find.Clusters.TStg1 <- function(y, X, long, lat, MR, M, overlap, alpha) {
   }
 
   n_obs <- sapply(clsL, sum)
-  if (length(n_obs) > 1) {
-    rownames(Clusters) <- NULL
-    Clusters <- cbind(Clusters, n_obs=n_obs)
-  } else {
-    Clusters <- c(Clusters, n_obs=n_obs)
-  }
+  # if (length(n_obs) > 1) {
+  #   rownames(Clusters) <- NULL
+  #   Clusters <- cbind(Clusters, n_obs=n_obs)
+  # } else {
+  #   Clusters <- c(Clusters, n_obs=n_obs)
+  # }
+  rownames(Clusters) <- NULL                   # Update: 2019/06/17
+  Clusters <- cbind(Clusters, n_obs=n_obs)     # Update: 2019/06/17
 
   # Coef <- coef_tmp[1:p,1:n_cls]
   Coef <- cbind(coef_tmp[1:p,1:n_cls],NULL)    # Update: 2019/06/16
@@ -174,20 +176,6 @@ Test.Cluster.TStg2.SL <- function(y, X, cdataL, M, ID, overlap) {
 }
 
 
-###################################################################################################
-# Find.Clusters.TStg2(y, X, long, lat, MR, M, Cls1st, overlap, alpha)                         #####
-### Find multiple clusters sequentially via SImulataneous detection.
-### Find and Test the Cluster in the Simple Linear Regression for given potential centroids
-### via the 2nd stage in Two-stage detection: the same slope but different intercept.
-### y: The input data(in Vector Format)
-### X: The input data(in Matrix Format)
-### long: longitude
-### lat:  latitude
-### M : number of simulations
-### Cls1st: the output from "Find.Clusters.TStg1" in the 1st-Stage
-### overlap: Boolean which is TRUE for overlapping clusters / FALSE for non-overlapping clusters
-### alpha : significant level
-
 #'@title Find.Clusters.TStg2
 #'@description Find multiple clusters sequentially via SImulataneous detection.
 #' Find and test the cluster in the simple linear regression for given potential centroids via the 2nd stage in Two-stage detection: the same slope but different intercept.
@@ -216,21 +204,23 @@ Find.Clusters.TStg2 <- function(y, X, long, lat, MR, M, Cls1st, overlap, alpha) 
   ID_tmp <- ID
   y_tmp <- y
   W <- X
-  for (j in 1:n_cls1) {
-    cent_tmp <- Cls1st$Clusters[j,1]
-    r_tmp <- Cls1st$Clusters[j,2]
-    d_tmp1 <- geosphere::distm(cbind(long,lat), c(long[cent_tmp],lat[cent_tmp]))/1000
-    d_tmp2 <- geosphere::distm(cbind(long[ID_tmp],lat[ID_tmp]), c(long[cent_tmp],lat[cent_tmp]))/1000
+  if (n_cls1 > 0) {                            # Update: 2019/06/17
+    for (j in 1:n_cls1) {
+      cent_tmp <- Cls1st$Clusters[j,1]
+      r_tmp <- Cls1st$Clusters[j,2]
+      d_tmp1 <- geosphere::distm(cbind(long,lat), c(long[cent_tmp],lat[cent_tmp]))/1000
+      d_tmp2 <- geosphere::distm(cbind(long[ID_tmp],lat[ID_tmp]), c(long[cent_tmp],lat[cent_tmp]))/1000
 
-	clsL[[j]]  <- as.vector(d_tmp1 <= r_tmp)
-    if (overlap) {
-      ID_tmp <- ID_tmp[ID_tmp != cent_tmp]
-    } else {
-      ID_tmp <- ID_tmp[!(d_tmp2 <= r_tmp)]
+      clsL[[j]]  <- as.vector(d_tmp1 <= r_tmp)
+      if (overlap) {
+        ID_tmp <- ID_tmp[ID_tmp != cent_tmp]
+      } else {
+        ID_tmp <- ID_tmp[!(d_tmp2 <= r_tmp)]
+      }
+      W <- cbind(W,X*(clsL[[j]]))
     }
-    W <- cbind(W,X*(clsL[[j]]))
+    y_tmp <- y_tmp - W[,-(1:p)]%*%Cls1st$Coef[-(1:p),(n_cls1+1)]
   }
-  y_tmp <- y_tmp - W[,-(1:p)]%*%Cls1st$Coef[-(1:p),(n_cls1+1)]
 
   pval_tmp <- 0
   Clusters <- NULL
@@ -245,7 +235,7 @@ Find.Clusters.TStg2 <- function(y, X, long, lat, MR, M, Cls1st, overlap, alpha) 
 
     n_cls <- n_cls + 1
 
-	d_tmp1 <- geosphere::distm(cbind(long,lat), c(long[cent_tmp],lat[cent_tmp]))/1000
+    d_tmp1 <- geosphere::distm(cbind(long,lat), c(long[cent_tmp],lat[cent_tmp]))/1000
     d_tmp2 <- geosphere::distm(cbind(long[ID_tmp],lat[ID_tmp]), c(long[cent_tmp],lat[cent_tmp]))/1000
     clsL[[n_cls]]  <- as.vector(d_tmp1 <= r_tmp)
     if (overlap) {
@@ -257,35 +247,55 @@ Find.Clusters.TStg2 <- function(y, X, long, lat, MR, M, Cls1st, overlap, alpha) 
     X_cls <- 1*(clsL[[n_cls]])
     W <- cbind(X,X_cls)
     b_tmp <- solve(t(W)%*%W)%*%t(W)%*%y_tmp
-	coef_tmp <- cbind(coef_tmp,b_tmp)
+    coef_tmp <- cbind(coef_tmp,b_tmp)
     y_tmp <- y_tmp - X_cls*b_tmp[(p+1)]
   }
 
-  n_obs <- sapply(clsL, sum)[-(1:n_cls1)]
-  if (length(n_obs) > 1) {
-    rownames(Clusters) <- NULL
-    Clusters <- cbind(Clusters, n_obs=n_obs)
-  } else {
-    Clusters <- c(Clusters, n_obs=n_obs)
+  # n_obs <- sapply(clsL, sum)[-(1:n_cls1)]
+  n_obs <- sapply(clsL, sum)                    # Update: 2019/06/17
+  if (n_cls1 > 0) {                             # Update: 2019/06/17
+    n_obs <- n_obs[-(1:n_cls1)]
   }
+
+  # if (length(n_obs) > 1) {
+  #   rownames(Clusters) <- NULL
+  #   Clusters <- cbind(Clusters, n_obs=n_obs)
+  # } else {
+  #   Clusters <- c(Clusters, n_obs=n_obs)
+  # }
+  rownames(Clusters) <- NULL                   # Update: 2019/06/17
+  Clusters <- cbind(Clusters, n_obs=n_obs)     # Update: 2019/06/17
 
   n_cls2 <- n_cls - n_cls1 - 1
-  Coef1 <- cbind(Cls1st$Coef,
-                 rbind(as.matrix(coef_tmp[1:p,1:n_cls2]),
-                       matrix(rep(Cls1st$Coef[-(1:p),(n_cls1+1)],n_cls2),(n_cls1*p),n_cls2)))
-  Coef2 <- NULL
-  coef_names <- NULL
-  for (j in 1:n_cls2) {
-    Coef2 <- rbind(Coef2, c(rep(NA,(n_cls1+j)), rep(coef_tmp[(p+1),j],(n_cls2-j+1))))
-    coef_names <- c(coef_names, paste("theta_", (n_cls1+j), ",", 0, sep=""))
+  if (n_cls2 > 0) {                            # Update: 2019/06/17
+    Coef1 <- cbind(Cls1st$Coef,
+                   rbind(as.matrix(coef_tmp[1:p,1:n_cls2]),
+                         matrix(rep(Cls1st$Coef[-(1:p),(n_cls1+1)],n_cls2),(n_cls1*p),n_cls2)))
+    Coef2 <- NULL
+    coef_names <- NULL
+    for (j in 1:n_cls2) {
+      Coef2 <- rbind(Coef2, c(rep(NA,(n_cls1+j)), rep(coef_tmp[(p+1),j],(n_cls2-j+1))))
+      coef_names <- c(coef_names, paste("theta_", (n_cls1+j), ",", 0, sep=""))
+    }
+    rownames(Coef2) <- coef_names
+    Coef <- rbind(Coef1,Coef2)
+  } else {
+    Coef <- Cls1st$Coef
   }
-  rownames(Coef2) <- coef_names
-  Coef <- rbind(Coef1,Coef2)
   colnames(Coef) <- 0:(n_cls-1)
 
-  Clusters <- rbind(Cls1st$Clusters[1:n_cls1,], Clusters)
-  Clusters <- cbind(Clusters, stage=c(rep(1,n_cls1),rep(2,(n_cls-n_cls1))))
-  Clusters <- Clusters[,-c(3,4)]
+  if (n_cls2 > 0) {                            # Update: 2019/06/17
+    if (n_cls1 > 0) {
+      Clusters <- rbind(Cls1st$Clusters[1:n_cls1,], Clusters)
+    }
+    Clusters <- cbind(Clusters, stage=c(rep(1,n_cls1),rep(2,(n_cls-n_cls1))))
+  } else {
+    Clusters <- cbind(Cls1st$Clusters, stage=1)
+  }
+
+  # Clusters <- Clusters[,-c(3,4)]
+  Clusters <- rbind(Clusters[,-c(3,4)], NULL)  # Update: 2019/06/17
+
   return(list(Clusters = Clusters, Coef = Coef, clsL = clsL))
 }
 
