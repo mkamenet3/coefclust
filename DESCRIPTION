@@ -13,7 +13,8 @@ Imports:
     graphics,
     utils,
     knitr,
-    Rcpp
+    Rcpp,
+    Matrix
 VignetteBuilder: knitr
 License: GPL (>=2)
 Encoding: UTF-8

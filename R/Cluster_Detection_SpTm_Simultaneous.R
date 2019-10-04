@@ -5,10 +5,10 @@
 source("FunctionMLC_LL_TMP.R")
 #source("FunctionMLC_LL.R")
 
-if (!require(Matrix)) {
-  install.packages("Matrix")
-  library(Matrix)
-}
+# if (!require(Matrix)) {
+#   install.packages("Matrix")
+#   library(Matrix)
+# }
 
 ###################################################################################################
 # Test.MLC.SI.ID.ST(yList, XList, cdataL, M, ID, overlap)                                     #####
@@ -20,11 +20,22 @@ if (!require(Matrix)) {
 #### ID: Indices for potential centroids
 #### overlap: Boolean which is TRUE for overlapping clusters / FALSE for non-overlapping clusters
 ###################################################################################################
+
+#'@title Test.MLC.SI.ID.ST
+#'@description Find and test the cylindrical spatio-temporal cluster for given ID via simulataneous detection.
+#'@param yList The input data (as a list of vectors).
+#'@param xList The input data (as a list of matrices).
+#'@param cdataL Pre-defined cdata list which is from \code{List.C.Data(DMatrix,MR)}.
+#'@param M Number of simulations
+#'@param ID Indices for potential centroids.
+#'@param overlap  Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters
+#'@return Most likely cluster, maximum F-statistic (of all simulations), and associated p-value.
+#'@export
 Test.MLC.SI.ID.ST <- function(yList, XList, cdataL, M, ID, overlap) {
   TestStat <- rep(NA,M+1)
   N <- dim(XList[[1]])[1]; p <- dim(XList[[1]])[2]
   T <- length(XList)
-  
+
   IPList <- list()
   SSE_0  <- 0
   n_na_y <- rep(0,T)      # number of is.na(y_t)
@@ -39,16 +50,16 @@ Test.MLC.SI.ID.ST <- function(yList, XList, cdataL, M, ID, overlap) {
     n_na_y[t] <- sum(is.na(y))
   }
   df_den <- (N-2*p)*T - sum(n_na_y)    # df of the denominator in the F statistic
-  
+
   Mlc <- MLC.CDL.ID.SL.ST(yList, XList, cdataL, ID, overlap)$Mlc
   l <- length(Mlc)
   SSE_2 <- Mlc[l]
   maxF <- ((SSE_0 - SSE_2)/(p*T))/(SSE_2/(df_den))
   sigSq0 <- SSE_0/((N-p)*T - sum(n_na_y))
-  
+
   # F statistic with (df1,df2) = (p*T,df_den)
   TestStat[1]  <- maxF
-  
+
   xList <- list();  sum_x1L <- list();  sum_x2L <- list();  cs.xxL.L <- list();
   for (t in 1:T) {
     y <- yList[[t]]
@@ -74,7 +85,7 @@ Test.MLC.SI.ID.ST <- function(yList, XList, cdataL, M, ID, overlap) {
     }
     cs.xxL.L[[t]] <- cs.xxL
   }
-  
+
   for (k in 1:M) {
     eList_k <- list()
     SSE_0 <- 0
@@ -88,11 +99,10 @@ Test.MLC.SI.ID.ST <- function(yList, XList, cdataL, M, ID, overlap) {
     SSE_2  <- MLC.CDL2.ID.SL.ST(eList_k, xList, cdataL, sum_x1L, sum_x2L, cs.xxL.L, ID, overlap)$Mlc[l]
     TestStat[k+1]<- ((SSE_0 - SSE_2)/(p*T))/(SSE_2/(df_den))
   }
-  
+
   pval <- (rank(-TestStat)[1])/(M+1)
-  #attributes(pval)$names <- "pval"
   c(Mlc, maxF=TestStat[1], pval=pval)
-}  
+}
 
 ###################################################################################################
 # Find.Clusters.SI.ST(yList, XList, long, lat, MR, M, overlap, alpha)                         #####
@@ -106,6 +116,19 @@ Test.MLC.SI.ID.ST <- function(yList, XList, cdataL, M, ID, overlap) {
 #### overlap: Boolean which is TRUE for overlapping clusters / FALSE for non-overlapping clusters
 #### alpha : significance level
 ###################################################################################################
+
+#'@title Find.Clusters.SI.ST
+#'@description Find multiple cylindrical spatio-temporal clusters sequentially via simultaneous detection. Find and test the cluster in the simple linear regression for given potential centroids.
+#'@param yList The input data (as a list of vectors).
+#'@param xList The input data (as a list of matrices).
+#'@param long longitude.
+#'@param lat latitude.
+#'@param M Number of simulations.
+#'@param ID Indices for potential centroids.
+#'@param overlap  Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters.
+#'@param alpha Significance level
+#'@return List of clusters, coefficients, and indicators.
+#'@export
 Find.Clusters.SI.ST <- function(yList, XList, long, lat, MR, M, overlap, alpha) {
   N <- dim(XList[[1]])[1]; p <- dim(XList[[1]])[2]
   T <- length(XList)
@@ -113,21 +136,20 @@ Find.Clusters.SI.ST <- function(yList, XList, long, lat, MR, M, overlap, alpha) 
   LL <- cbind(long, lat)
   DMatrix <- distm(LL)/1000
   cdataL <- List.C.Data(DMatrix,MR)
-  
+
   print("Finding 1st Cluster")
   time_tmp <- system.time(C_tmp <- Test.MLC.SI.ID.ST(yList, XList, cdataL, M, ID, overlap))
-  # Clusters <- c(C_tmp,time_tmp[3]/60)
   Clusters <- rbind(c(C_tmp,time_tmp[3]/60), NULL)    # Update: 2019/09/07
   pval_tmp <- C_tmp[5]
   cent_tmp <- C_tmp[1]
-  
+
   clsL <- list()    # a list of indicator for each cluster
   n_cls <- 1        # number of clusters
-  
+
   d_tmp <- distm(cbind(long,lat), c(long[cent_tmp],lat[cent_tmp]))/1000
   clsL[[n_cls]]  <- as.vector(d_tmp <= C_tmp[2])
   ID_tmp <- ID[ID != cent_tmp]
-  
+
   yList_tmp <- list()
   for (t in 1:T) {
     yt <- yList[[t]]
@@ -139,21 +161,21 @@ Find.Clusters.SI.ST <- function(yList, XList, long, lat, MR, M, overlap, alpha) 
     bt_tmp <- solve(t(Wt_valid)%*%Wt_valid)%*%t(Wt_valid)%*%yt_valid
     yList_tmp[[t]] <- yt - Xt_cls%*%bt_tmp[(p+1):(2*p)]
   }
-  
+
   while (pval_tmp < alpha) {
     print(paste("Finding ", n_cls + 1, "th Cluster", sep=""))
     time_tmp <- system.time(C_tmp <- Test.MLC.SI.ID.ST(yList_tmp, XList, cdataL, M, ID_tmp, overlap))
     Clusters <- rbind(Clusters,c(C_tmp,time_tmp[3]/60))
     pval_tmp <- C_tmp[5]
     cent_tmp <- C_tmp[1]
-    
+
     n_cls <- n_cls + 1
-    
+
     d_tmp1 <- distm(cbind(long,lat), c(long[cent_tmp],lat[cent_tmp]))/1000
     d_tmp2 <- distm(cbind(long[ID_tmp],lat[ID_tmp]), c(long[cent_tmp],lat[cent_tmp]))/1000
     clsL[[n_cls]]  <- as.vector((d_tmp1 <= C_tmp[2]))
     ID_tmp <- ID_tmp[ID_tmp != cent_tmp]
-    
+
     for (t in 1:T) {
       yt <- yList_tmp[[t]]
       Xt <- XList[[t]]
@@ -165,21 +187,15 @@ Find.Clusters.SI.ST <- function(yList, XList, long, lat, MR, M, overlap, alpha) 
       yList_tmp[[t]] <- yt - Xt_cls%*%bt_tmp[(p+1):(2*p)]
     }
   }
-  
+
   n_obs <- sapply(clsL, sum)
-  # if (length(n_obs) > 1) {
-  #   rownames(Clusters) <- NULL
-  #   Clusters <- cbind(Clusters, n_obs=n_obs)
-  # } else {
-  #   Clusters <- c(Clusters, n_obs=n_obs)
-  # }
   rownames(Clusters) <- NULL                   # Update: 2019/09/07
   Clusters <- cbind(Clusters, n_obs=n_obs)     # Update: 2019/09/07
-  Clusters <- rbind(Clusters[,-c(3,4)], NULL)  # Update: 2019/09/07 
-  
+  Clusters <- rbind(Clusters[,-c(3,4)], NULL)  # Update: 2019/09/07
+
   Coef <- Est.Coeff.SI.ST(yList, XList, long, lat, Clusters)  # Update: 2019/09/07
-  
-  return(list(Clusters = Clusters, Coef = Coef, Indicator = clsL))  
+
+  return(list(Clusters = Clusters, Coef = Coef, Indicator = clsL))
 }
 
 
@@ -188,19 +204,28 @@ Find.Clusters.SI.ST <- function(yList, XList, long, lat, MR, M, overlap, alpha) 
 ### lm Fit the model with detected clusters
 ### Clusters: the output from "Find.Clusters.SI.ST"
 ###################################################################################################
+
+#'@title Fit.Model.Clusters.ST
+#'@description Fit a simple linear regression model with detected clusters.
+#'@param yList The input data (as a list of vectors).
+#'@param xList The input data (as a list of matrices).
+#'@param long longitude.
+#'@param lat latitude.
+#'@param Clusters Inherited output from \code{Find.Clusters.SI.ST()}.
+#'@export
 Fit.Model.Clusters.ST <- function(yList, XList, long, lat, Clusters) {
   WList <- XList
   clsL <- list()
   n_cls <- dim(Clusters)[1] - 1       # number of clusters
   p <- dim(XList[[1]])[2]; T <- length(XList)
-  
+
   coeff_namesList <- list()
   modelList <- list()
   for (t in 1:T) {
-    coeff_namesList[[t]] <- paste("b0_", 0:(p-1), "_t", t, sep="")   # names for the prameter estimates
-    modelList[[t]] <- paste(" + b0_", 0:(p-1), "_t", t, sep="", collapse = "")  # model to fit  
+    coeff_namesList[[t]] <- paste("b0_", 0:(p-1), "_t", t, sep="")   # names for the parameter estimates
+    modelList[[t]] <- paste(" + b0_", 0:(p-1), "_t", t, sep="", collapse = "")  # model to fit
   }
-  
+
   if (n_cls > 0) {
     for (j in 1:n_cls) {
       for (t in 1:T) {
@@ -214,7 +239,7 @@ Fit.Model.Clusters.ST <- function(yList, XList, long, lat, Clusters) {
       }
     }
   }
-  
+
   coeff_names <- NULL
   model <- "y ~ -1"
   y <- NULL
@@ -226,7 +251,7 @@ Fit.Model.Clusters.ST <- function(yList, XList, long, lat, Clusters) {
     W <- as.matrix(bdiag(W,WList[[t]]))
   }
   W <- W[-1,-1]
-  
+
   data_cls <- data.frame(y,W)
   colnames(data_cls) <- c("y", coeff_names)
   lm(model, data = data_cls)
@@ -235,20 +260,29 @@ Fit.Model.Clusters.ST <- function(yList, XList, long, lat, Clusters) {
 ###################################################################################################
 # Est.Coeff.SI.ST                                                                             #####
 ###################################################################################################
+#'@title Est.Coeff.SI.ST
+#'@description Estimate coefficients via simultaneous detection.
+#'@param yList The input data (as a list of vectors).
+#'@param xList The input data (as a list of matrices).
+#'@param long longitude.
+#'@param lat latitude.
+#'@param Clusters Inherited output from \code{Find.Clusters.SI.ST()}.
+#'@return List of coefficients
+#'@export
 Est.Coeff.SI.ST <- function(yList, XList, long, lat, Clusters) {
   WList <- list()
   clsL <- list()
-  # n_cls <- dim(Clusters)[1] - 1       # number of clusters
+ # number of clusters
   n_cls <- dim(Clusters)[1]             # Update: 2019/09/07
-  p <- dim(XList[[1]])[2]; T <- length(XList)    
-  
+  p <- dim(XList[[1]])[2]; T <- length(XList)
+
   b_tmp <- list()
   coef_tmp <- list()
   for (t in 1:T) {
     b_tmp[[t]] <- solve(t(XList[[t]])%*%XList[[t]])%*%t(XList[[t]])%*%yList[[t]]
     coef_tmp[[t]] <- c(b_tmp[[t]],rep(NA,length(b_tmp[[t]])))
-  } 
-  
+  }
+
   XList_cls <- list()
   yList_tmp <- yList
   if (n_cls > 0) {
@@ -256,17 +290,17 @@ Est.Coeff.SI.ST <- function(yList, XList, long, lat, Clusters) {
       cent_tmp <- Clusters[j,1]
       r_tmp <- Clusters[j,2]
       d_tmp <- distm(cbind(long,lat), c(long[cent_tmp],lat[cent_tmp]))/1000
-      clsL[[j]]  <- as.vector(d_tmp <= r_tmp)	
+      clsL[[j]]  <- as.vector(d_tmp <= r_tmp)
       for (t in 1:T) {
         XList_cls[[t]] <- XList[[t]]*(clsL[[j]])
-        WList[[t]] <- cbind(XList[[t]],XList_cls[[t]])	
+        WList[[t]] <- cbind(XList[[t]],XList_cls[[t]])
         b_tmp[[t]] <- solve(t(WList[[t]])%*%WList[[t]])%*%t(WList[[t]])%*%yList_tmp[[t]]
-        coef_tmp[[t]] <- cbind(coef_tmp[[t]], b_tmp[[t]])	
-        yList_tmp[[t]] <- yList_tmp[[t]] - XList_cls[[t]]%*%b_tmp[[t]][(p+1):(2*p)]	
+        coef_tmp[[t]] <- cbind(coef_tmp[[t]], b_tmp[[t]])
+        yList_tmp[[t]] <- yList_tmp[[t]] - XList_cls[[t]]%*%b_tmp[[t]][(p+1):(2*p)]
       }
     }
   }
-  
+
   Coef <- list()
   for (t in 1:T) {
     Coef[[t]] <- cbind(coef_tmp[[t]][1:p,1:n_cls],NULL)
@@ -274,21 +308,20 @@ Est.Coeff.SI.ST <- function(yList, XList, long, lat, Clusters) {
     if (n_cls > 1) {                             # Update: 2019/09/07
       for (j in 1:(n_cls-1)) {
         Coef[[t]] <- rbind(Coef[[t]],
-                           cbind(matrix(rep(NA,p*j),p,j), 
+                           cbind(matrix(rep(NA,p*j),p,j),
                                  matrix(rep(coef_tmp[[t]][(p+1):(2*p),(j+1)],(n_cls-j)),p,(n_cls-j))))
         coef_names <- c(coef_names, paste("theta_", j, ",", 0:(p-1), sep=""))
       }
     }
-    # colnames(Coef[[t]]) <- 0:n_cls
     colnames(Coef[[t]]) <- 0:(n_cls-1)      # Update: 2019/09/07
     rownames(Coef[[t]]) <- coef_names
   }
-    
+
   Coeff_Table <- NULL
   for (t in 1:length(Coef)) {
-    Coeff_Table <- cbind(Coeff_Table, Coef[[t]][,(dim(Coef[[t]])[2])])  
+    Coeff_Table <- cbind(Coeff_Table, Coef[[t]][,(dim(Coef[[t]])[2])])
   }
-  
+
   return(list(Coeff_History = Coef, Coeff_Table = Coeff_Table))
 }
 
