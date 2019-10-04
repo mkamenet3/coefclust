@@ -765,6 +765,18 @@ MLC.CDL2.ID.SL.ST <- function(yList, xList, cdataL, sum_x1L, sum_x2L, cs.xxL.L, 
 #### cdataL: Pre-defined cdata list which is from List.C.Data(DMatrix,MR)
 #### ID: Indices for potential centroids
 #### overlap: Boolean which is TRUE for overlapping clusters / FALSE for non-overlapping clusters
+
+#'@title Fstat.CDL.ID.SL1.ST
+#'@description Find the spatio-temporal cluster estimate in the simple linear regression for given potential centroids in the slope: different slope and different intercept.
+#'@param yList The input data (as a list of vectors).
+#'@param xList The input data (as a list of matrices).
+#'@param cdataL Pre-defined cdata list which is from \code{List.C.Data(DMatrix,MR)}.
+#'@param ID Indices for potential centroids.
+#'@param overlap  Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters
+#'@return Most likely cluster (defined by center and radius), SSE (error sum of squares) 1 and 2, maximum F-statistic of the slope.
+#'@export
+
+
 Fstat.CDL.ID.SL1.ST <- function(yList, XList, cdataL, ID, overlap) {
   mlc <- NULL
   T <- length(XList)
@@ -789,7 +801,7 @@ Fstat.CDL.ID.SL1.ST <- function(yList, XList, cdataL, ID, overlap) {
   for (k in ID) {
     dat.k <- cdataL[[k]]
     dat.k$dr <- round(dat.k$r - c(dat.k$r[-1],0),10) # Update: 2015/08/05
-    # For non-overlapping assumpsion
+    # For non-overlapping assumption
     # Update: 2015/06/22
     if (!overlap && length(which(dat.k$id %in% nonID)) > 0) {
       # remove all cluster which overlaps the previous clusters  
@@ -814,7 +826,6 @@ Fstat.CDL.ID.SL1.ST <- function(yList, XList, cdataL, ID, overlap) {
             nc[j:length_yc] <- nc[j:length_yc] - 1
           }
         }
-        
         # compute cumulative sum
         cs <- cum.sum.scalar(yc, xc)
         cs$nc <- nc                 # Updated 2016/02/29
@@ -879,6 +890,17 @@ Fstat.CDL.ID.SL1.ST <- function(yList, XList, cdataL, ID, overlap) {
 #### cdataL: Pre-defined cdata list which is from List.C.Data(DMatrix,MR)
 #### ID: Indices for potential centroids
 #### overlap: Boolean which is TRUE for overlapping clusters / FALSE for non-overlapping clusters
+
+#'@title Fstat.CDL.ID.SL2.ST 
+#'@description Find the spatio-temporal cluster estimate in the simple linear regression for given potential centroids in the intercept only: the same slope but different intercept.
+#'@param yList The input data (as a list of vectors).
+#'@param xList The input data (as a list of matrices).
+#'@param cdataL Pre-defined cdata list which is from \code{List.C.Data(DMatrix,MR)}.
+#'@param ID Indices for potential centroids.
+#'@param overlap  Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters
+#'@return Most likely cluster (defined by center and radius), SSE (error sum of squares) 1.
+#'@export
+#'
 Fstat.CDL.ID.SL2.ST <- function(yList, XList, cdataL, ID, overlap) {
   mlc <- NULL
   T <- length(XList)
@@ -928,7 +950,6 @@ Fstat.CDL.ID.SL2.ST <- function(yList, XList, cdataL, ID, overlap) {
             nc[j:length_yc] <- nc[j:length_yc] - 1
           }
         }
-        
         # compute cumulative sum
         cs <- cum.sum.scalar(yc, xc)
         cs$nc <- nc                 # Updated 2016/02/29
@@ -962,7 +983,6 @@ Fstat.CDL.ID.SL2.ST <- function(yList, XList, cdataL, ID, overlap) {
       mlc <- rbind(mlc,kpick1)
     }      
   }
-  
   colnames(mlc) <- c("center","radius","SSE1")
   d2 <- dim(mlc)[2]
   
@@ -984,6 +1004,16 @@ Fstat.CDL.ID.SL2.ST <- function(yList, XList, cdataL, ID, overlap) {
 #### cdataL: Pre-defined cdata list which is from List.C.Data(DMatrix,MR)
 #### ID: Indices for potential centroids
 #### overlap: Boolean which is TRUE for overlapping clusters / FALSE for non-overlapping clusters
+
+#'@title TStg.CDL.ID.SL.ST 
+#'@description Find the spatio-temporal cluster estimate in the simple linear regression for given potential centroids in the slope (1st Stage) and the intercept (2nd stage).
+#'@param yList The input data (as a list of vectors).
+#'@param xList The input data (as a list of matrices).
+#'@param cdataL Pre-defined cdata list which is from \code{List.C.Data(DMatrix,MR)}.
+#'@param ID Indices for potential centroids.
+#'@param overlap  Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters
+#'@return List of most likely clusters. First element contains information for the most likely cluster based on slope. The second element contains information for the most likely cluster based on intercept. For each element (slope and intercept), MLC center and radius, SSE (error sum of squares) for the slope/intercept, SSE 2, and max F-statistic for the slope/intercept.
+#'@export
 TStg.CDL.ID.SL.ST <- function(yList, XList, cdataL, ID, overlap) {
   mlc_slp <- mlc_int <- NULL
   T <- length(XList)
@@ -1033,7 +1063,6 @@ TStg.CDL.ID.SL.ST <- function(yList, XList, cdataL, ID, overlap) {
             nc[j:length_yc] <- nc[j:length_yc] - 1
           }
         }
-        
         # compute cumulative sum
         cs <- cum.sum.scalar(yc, xc)
         cs$nc <- nc                 # Updated 2016/02/29
