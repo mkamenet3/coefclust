@@ -30,7 +30,6 @@
 #'@param ID Indices for potential centroids.
 #'@param overlap  Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters
 #'@return Most likely cluster, maximum F-statistic (of all simulations), and associated p-value.
-#'@export
 Test.MLC.SI.ID.ST <- function(yList, XList, cdataL, M, ID, overlap) {
   TestStat <- rep(NA,M+1)
   N <- dim(XList[[1]])[1]; p <- dim(XList[[1]])[2]
@@ -123,11 +122,12 @@ Test.MLC.SI.ID.ST <- function(yList, XList, cdataL, M, ID, overlap) {
 #'@param XList The input data (as a list of matrices).
 #'@param long longitude.
 #'@param lat latitude.
+#'@param MR Maximum radius.
 #'@param M Number of simulations.
 #'@param ID Indices for potential centroids.
 #'@param overlap  Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters.
 #'@param alpha Significance level
-#'@return List of clusters, coefficients, and indicators.
+#'@return List of clusters, coefficients, and indicator of cluster membership.
 #'@export
 Find.Clusters.SI.ST <- function(yList, XList, long, lat, MR, M, overlap, alpha) {
   N <- dim(XList[[1]])[1]; p <- dim(XList[[1]])[2]
@@ -268,7 +268,6 @@ Fit.Model.Clusters.ST <- function(yList, XList, long, lat, Clusters) {
 #'@param lat latitude.
 #'@param Clusters Inherited output from \code{Find.Clusters.SI.ST()}.
 #'@return List of coefficients
-#'@export
 Est.Coeff.SI.ST <- function(yList, XList, long, lat, Clusters) {
   WList <- list()
   clsL <- list()

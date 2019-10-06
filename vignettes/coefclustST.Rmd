@@ -32,7 +32,7 @@ Load in the toy dataset for the spatio-temporal analysis that comes from the pac
 
 ```{r}
 ###################################################################################################
-load("../data/SE_FakeData_ST.RData")
+load("../data/SE_FakeData_SpTm.RData")
 str(SE_FakeData_SpTm)
 ```
 
@@ -92,6 +92,7 @@ Clusters_simST <- Find.Clusters.SI.ST(yList, XList, long, lat, MR, M, overlap=FA
 str(Clusters_simST)
 Clusters_simST$Clusters
 Clusters_simST$Coef
+table(Clusters_simST$Indicator)
 ```
 
 The output is an object `Clusters_simST` which is a list of 3 elements:
@@ -108,29 +109,55 @@ cbind(SE_FakeData_SpTm[Clusters_simST$Clusters[,1],1:2],Clusters_simST$Clusters)
 
 ##Detecting Multiple Clusters Sequentially Using Two-Stage Detection
 
+
+We use the functions `Find.Clusters.TS.ST1()`, ` Find.Clusters.TS.ST2()` for detectiong multiple clusters sequentially using simultaneous detection. Like the `Find.Clusters.SI.ST()` function for simultaneous detection above, this function will take the list of responses we created (`yList`) as the first argument and the list of covariates (`XList`) as the second argument. The lists of resposnes and covariates are followed by the longitude coordinate, latitude coordinate, the maximum radius for potential clusters `MR`, the number of simulations `M`, we set `overlap=FALSE` to not allow for overlapping clusters, and set `alpha=0.05` as the Type I error rate.
+
+The results from the first stage (using `Find.Clusters.TS.ST1()`) are stored as the object `Clusters_ts1N`. This is then used as an argument for the function  ` Find.Clusters.TS.ST2()` where we specify the clusters identified in the first stage as `Cls1st=Clusters_ts1N`.
+
+
 ```{r}
 ###################################################################################################
 ### Find Multiple Clusters Sequentially via the Two--Stage Detection ##############################
-source("Cluster_Detection_SpTm_TwoStage.R")
+#source("Cluster_Detection_SpTm_TwoStage.R")
 Clusters_ts1N <- Find.Clusters.TS.ST1(yList, XList, long, lat, MR, M, overlap=FALSE, alpha=0.05)
 Clusters_ts2N <- Find.Clusters.TS.ST2(yList, XList, long, lat, MR, M, Cls1st=Clusters_ts1N, overlap=FALSE, alpha=0.05)
+
+#Explore the spatio-temporal identified clusters (via two-stage detection)
+str(Clusters_ts2N)
+Clusters_ts2N$Clusters
+Clusters_ts2N$Coef
+table(Clusters_ts2N$Indicator)
+```
+
+The final output of the spatio-temporal two-stage detection is stored in the object `Clusters_ts2N`, which is a list of 3 elements:
+
+- `Clusters_ts2N$Clusters` (first element of list): provides the resulting identified cluster, with information about the center ID, radius, p-value, elapsed computation time, and number of observations in the cluster.
+- `Clusters_ts2N$Coef` (second element of list): provides estimates for `beta_0` (intercept) and `beta_1` (slope) for each time period.
+- `Clusters_ts2N$Indicator` (third element of list): is Boolean vector that is `TRUE` if the given center is inside the cluster and `FALSE` if it is not.
+
+
+To identify the cluster by it’s county name, we can column bind the information from the `SE_FakeData_SpTm` dataset with the identified cluster information:
+
+```{r}
+cbind(SE_FakeData_SpTm[Clusters_ts2N$Clusters[,1],1:2],Clusters_ts2N$Clusters)
+```
+
+###Bonferroni Correction
+
+In order to adjust for multiple testing across the two stages, the Bonferroni correction can be applied to the p-value associated with the detected cluster. To do so, we specify ` alpha=(0.05/2)`:
+
+
+```{r}
 ### With the Bonferroni correction
 Clusters_ts1B <- Find.Clusters.TS.ST1(yList, XList, long, lat, MR, M, overlap=FALSE, alpha=(0.05/2))
 Clusters_ts2B <- Find.Clusters.TS.ST2(yList, XList, long, lat, MR, M, Cls1st=Clusters_ts1B, overlap=FALSE, alpha=(0.05/2))
-
-###################################################################################################
-Clusters_sim$Clusters
-cbind(SE_FakeData_SpTm[Clusters_sim$Clusters[,1],1:2],Clusters_sim$Clusters)
-Clusters_sim$Coef
-
-Clusters_ts2N$Clusters
-cbind(SE_FakeData_SpTm[Clusters_ts2N$Clusters[,1],1:2],Clusters_ts2N$Clusters)
-Clusters_ts2N$Coef
-
-Clusters_ts2B$Clusters
-cbind(SE_FakeData_SpTm[Clusters_ts2B$Clusters[,1],1:2],Clusters_ts2B$Clusters)
-Clusters_ts2B$Coef
-
-
 ```
+
+
+To identify the cluster by it’s county name, we can column bind the information from the `SE_FakeData_SpTm` dataset with the identified cluster information:
+
+```{r}
+cbind(SE_FakeData_SpTm[Clusters_ts2B$Clusters[,1],1:2],Clusters_ts2B$Clusters)
+```
+
 
