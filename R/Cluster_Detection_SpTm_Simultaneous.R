@@ -24,7 +24,7 @@
 #'@title Test.MLC.SI.ID.ST
 #'@description Find and test the cylindrical spatio-temporal cluster for given ID via simulataneous detection.
 #'@param yList The input data (as a list of vectors).
-#'@param xList The input data (as a list of matrices).
+#'@param XList The input data (as a list of matrices).
 #'@param cdataL Pre-defined cdata list which is from \code{List.C.Data(DMatrix,MR)}.
 #'@param M Number of simulations
 #'@param ID Indices for potential centroids.
@@ -120,7 +120,7 @@ Test.MLC.SI.ID.ST <- function(yList, XList, cdataL, M, ID, overlap) {
 #'@title Find.Clusters.SI.ST
 #'@description Find multiple cylindrical spatio-temporal clusters sequentially via simultaneous detection. Find and test the cluster in the simple linear regression for given potential centroids.
 #'@param yList The input data (as a list of vectors).
-#'@param xList The input data (as a list of matrices).
+#'@param XList The input data (as a list of matrices).
 #'@param long longitude.
 #'@param lat latitude.
 #'@param M Number of simulations.
@@ -208,7 +208,7 @@ Find.Clusters.SI.ST <- function(yList, XList, long, lat, MR, M, overlap, alpha) 
 #'@title Fit.Model.Clusters.ST
 #'@description Fit a simple linear regression model with detected clusters.
 #'@param yList The input data (as a list of vectors).
-#'@param xList The input data (as a list of matrices).
+#'@param XList The input data (as a list of matrices).
 #'@param long longitude.
 #'@param lat latitude.
 #'@param Clusters Inherited output from \code{Find.Clusters.SI.ST()}.
@@ -263,7 +263,7 @@ Fit.Model.Clusters.ST <- function(yList, XList, long, lat, Clusters) {
 #'@title Est.Coeff.SI.ST
 #'@description Estimate coefficients via simultaneous detection.
 #'@param yList The input data (as a list of vectors).
-#'@param xList The input data (as a list of matrices).
+#'@param XList The input data (as a list of matrices).
 #'@param long longitude.
 #'@param lat latitude.
 #'@param Clusters Inherited output from \code{Find.Clusters.SI.ST()}.
