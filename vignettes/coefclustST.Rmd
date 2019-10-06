@@ -1,0 +1,21 @@
+---
+title: "Spatio-Temporal Analysis Using coefclust"
+author: "Junho Lee, Maria Kamenetsky"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to coefclust}
+  %\VignetteEngine{knitr::knitr}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+First, load the `coefclust` package and the `geosphere` package.
+
+```{r}
+# library(coefclust)
+# library(geosphere)
+```
+
