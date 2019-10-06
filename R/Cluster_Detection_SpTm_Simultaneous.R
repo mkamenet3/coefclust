@@ -2,7 +2,7 @@
 ###################################################################################################
 # setwd("C:/01.ACADEMY/03.UWM/SPATIAL/SpatialCluster/MyFunctions")
 #setwd("C:/JUNO/SpatialCluster/MyFunctions")
-source("FunctionMLC_LL_TMP.R")
+#source("../R/FunctionMLC_LL_TMP.R")
 #source("FunctionMLC_LL.R")
 
 # if (!require(Matrix)) {
