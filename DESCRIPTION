@@ -12,7 +12,9 @@ Imports:
     methods,
     graphics,
     utils,
-    knitr
+    knitr,
+    Rcpp,
+    Matrix
 VignetteBuilder: knitr
 License: GPL (>=2)
 Encoding: UTF-8

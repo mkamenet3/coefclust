@@ -16,6 +16,7 @@ Please report any bugs or modifications to issues
 Required packages include:
 
 - `geosphere` (>=1.5)
+- `Matrix` (>=1.2-15)
 
 
 To download the latest version of `coefclust`:

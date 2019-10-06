@@ -56,7 +56,7 @@ Test.Cluster.Simul.SL <- function(y, X, cdataL, M, ID, overlap) {
 #'@param M number of simulations
 #'@param overlap  Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters
 #'@param alpha significance level
-#'@return list of cluster, coefficient
+#'@return list of cluster, coefficient, and indicator of cluster membership.
 #'@export
 Find.Clusters.Simul <- function(y, X, long, lat, MR, M, overlap, alpha) {
   ID <- 1:length(y)
