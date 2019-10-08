@@ -9,13 +9,13 @@ Fstat.CDL.ID.SL2.ST(yList, XList, cdataL, ID, overlap)
 \arguments{
 \item{yList}{The input data (as a list of vectors).}
 
+\item{XList}{The input data (as a list of matrices).}
+
 \item{cdataL}{Pre-defined cdata list which is from \code{List.C.Data(DMatrix,MR)}.}
 
 \item{ID}{Indices for potential centroids.}
 
 \item{overlap}{Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters}
-
-\item{xList}{The input data (as a list of matrices).}
 }
 \value{
 Most likely cluster (defined by center and radius), sum of squared errors 1 (from model which has clusters in intercept only).

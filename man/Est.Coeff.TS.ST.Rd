@@ -13,7 +13,7 @@ Est.Coeff.TS.ST(yList, XList, Cls1stIndicator, Cls2ndIndicator)
 
 \item{Cls1stIndicator}{Indicator of clusters identified in stage 1.}
 
-\item{Cls2ndIndicatorIndicator}{Indicator of clusters identified in stage 2.}
+\item{Cls2ndIndicator}{Indicator of clusters identified in stage 2.}
 }
 \value{
 List of coefficients

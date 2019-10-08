@@ -22,8 +22,6 @@ Find.Clusters.SI.ST(yList, XList, long, lat, MR, M, overlap, alpha)
 \item{overlap}{Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters.}
 
 \item{alpha}{Significance level}
-
-\item{ID}{Indices for potential centroids.}
 }
 \value{
 List of clusters, coefficients, and indicator of cluster membership.

@@ -9,13 +9,13 @@ TStg.CDL.ID.SL.ST(yList, XList, cdataL, ID, overlap)
 \arguments{
 \item{yList}{The input data (as a list of vectors).}
 
+\item{XList}{The input data (as a list of matrices).}
+
 \item{cdataL}{Pre-defined cdata list which is from \code{List.C.Data(DMatrix,MR)}.}
 
 \item{ID}{Indices for potential centroids.}
 
 \item{overlap}{Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters}
-
-\item{xList}{The input data (as a list of matrices).}
 }
 \value{
 List of most likely clusters. First element contains information for the most likely cluster based on slope. The second element contains information for the most likely cluster based on intercept. For each element (slope and intercept), MLC center and radius, SSE (error sum of squares) for the slope/intercept, sum of squared error (from the model which has the cluster in both the intercept and slope), and max F-statistic for the slope/intercept.

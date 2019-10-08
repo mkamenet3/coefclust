@@ -7,6 +7,8 @@
 Find.Clusters.TS.ST1(yList, XList, long, lat, MR, M, overlap, alpha)
 }
 \arguments{
+\item{yList}{The input data (as a list of vectors).}
+
 \item{XList}{The input data (as a list of matrices).}
 
 \item{long}{longitude.}
@@ -20,12 +22,10 @@ Find.Clusters.TS.ST1(yList, XList, long, lat, MR, M, overlap, alpha)
 \item{overlap}{Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters.}
 
 \item{alpha}{Significance level}
-
-\item{ID}{Indices for potential centroids.}
 }
 \value{
 List of clusters, coefficients, and indicator of cluster membership.
 }
 \description{
-Find multiple (overlapping) cylindrical spatio-temporal clusters sequentially in the slopes via two-stage detection (in the 1st #'@param yList The input data (as a list of vectors).
+Find multiple (overlapping) cylindrical spatio-temporal clusters sequentially in the slopes via two-stage detection (in the 1st stage).
 }

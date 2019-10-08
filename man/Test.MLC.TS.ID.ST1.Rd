@@ -4,12 +4,16 @@
 \alias{Test.MLC.TS.ID.ST1}
 \title{Test.MLC.TS.ID.ST1}
 \usage{
-Test.MLC.TS.ID.ST1(yList, XList, cdataL, M, ID, overlap)
+Test.MLC.TS.ID.ST1(yList, XList, long, lat, cdataL, M, ID, overlap)
 }
 \arguments{
 \item{yList}{The input data (as a list of vectors).}
 
 \item{XList}{The input data (as a list of matrices).}
+
+\item{long}{Longitude.}
+
+\item{lat}{Latitude.}
 
 \item{cdataL}{Pre-defined cdata list which is from \code{List.C.Data(DMatrix,MR)}.}
 

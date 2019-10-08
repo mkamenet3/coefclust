@@ -72,7 +72,8 @@ Test.MLC.SI.ID.ST <- function(yList, XList, cdataL, M, ID, overlap) {
       e_valid <- e_k[!is.na(e_k)]
       SSE_0 <- SSE_0 + t(e_valid)%*%IPList[[t]]%*%(e_valid)
     }
-    SSE_2  <- MLC.CDL2.ID.SL.ST(eList_k, xList, cdataL, sum_x1L, sum_x2L, cs.xxL.L, ID, overlap)$Mlc[l]
+    #SSE_2  <- MLC.CDL2.ID.SL.ST(eList_k, xList, cdataL, sum_x1L, sum_x2L, cs.xxL.L, ID, overlap)$Mlc[l]
+    SSE_2  <- MLC.CDL2.ID.SL.ST(eList_k, xList, cdataL, sum_x1L, sum_x2L, cs.xxL.L, ID, overlap, Time, N, p)$Mlc[l]
     TestStat[k+1]<- ((SSE_0 - SSE_2)/(p*T))/(SSE_2/(df_den))
   }
 

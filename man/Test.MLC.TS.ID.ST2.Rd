@@ -4,10 +4,16 @@
 \alias{Test.MLC.TS.ID.ST2}
 \title{Test.MLC.TS.ID.ST2}
 \usage{
-Test.MLC.TS.ID.ST2(yList, XList, cdataL, M, ID, overlap)
+Test.MLC.TS.ID.ST2(yList, XList, long, lat, cdataL, M, ID, overlap)
 }
 \arguments{
 \item{yList}{The input data (as a list of vectors).}
+
+\item{XList}{The input data (as a list of matrices).}
+
+\item{long}{Longitude.}
+
+\item{lat}{Latitude.}
 
 \item{cdataL}{Pre-defined cdata list which is from \code{List.C.Data(DMatrix,MR)}.}
 
@@ -16,8 +22,6 @@ Test.MLC.TS.ID.ST2(yList, XList, cdataL, M, ID, overlap)
 \item{ID}{Indices for potential centroids.}
 
 \item{overlap}{Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters}
-
-\item{xList}{The input data (as a list of matrices).}
 }
 \value{
 Most likely cluster, maximum F-statistic (of all simulations), and associated p-value.

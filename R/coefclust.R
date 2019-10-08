@@ -523,19 +523,26 @@ MLC.CDL.ID.SL.ST <- function(yList, XList, cdataL, ID, overlap) {
 #'@title MLC.CDL2.ID.SL.ST
 #'@description Find the spatio-temporal cluster estimate in the simple linear regression for given potential centroids.
 #'@param yList The input data (as a list of vectors).
-#'@param xList The input data (as a list of vectors).
+#'@param XList The input data (as a list of vectors).
 #'@param cdataL Pre-defined cdata list which is from \code{List.C.Data(DMatrix,MR)}.
 #'@param sum_x1L List of pre-computed \eqn{\sum x_i}.
 #'@param sum_x2L List of pre-computed \eqn{\sum x_i^2}.
 #'@param cs.xxL.L List of pre-computed \code{cs.xx} list which is from \code{cum.sum.scalar1(xc)}.
 #'@param ID Indices for potential centroids.
 #'@param overlap  Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters
+#'@param Time Number of time periods.
+#'@param N Number of centroids (subregions).
+#'@param p Number of dimensions of original XList.
 #'@return Most likely cluster (defined by center and radius) and SSE (error sum of squares).
 #'@export
-MLC.CDL2.ID.SL.ST <- function(yList, xList, cdataL, sum_x1L, sum_x2L, cs.xxL.L, ID, overlap) {
+MLC.CDL2.ID.SL.ST <- function(yList, xList, cdataL, sum_x1L, sum_x2L, cs.xxL.L, ID, overlap, Time, N, p) {
     mlc <- NULL
-    T <- length(xList)
-    N <- dim(xList[[1]])[1]; p <- dim(xList[[1]])[2]
+    # T <- length(XList)
+    # #print(paste0("Length XList: ", T))
+    # N <- dim(XList[[1]])[1]; p <- dim(XList[[1]])[2]
+
+    #print(paste0("N<-dim(XList)", N))
+    #print(paste0("p <- dim(XList[[2]][2]", p))
 
     wholeID <- 1:N                             # Update: 2015/06/22
     nonID <- wholeID[!(wholeID %in% ID)]       # Update: 2015/06/22
@@ -544,7 +551,12 @@ MLC.CDL2.ID.SL.ST <- function(yList, xList, cdataL, sum_x1L, sum_x2L, cs.xxL.L, 
     # Updated 2016/03/01
     sum_y1L <- list();  sum_y2L <- list();  sum_xyL <- list();
     for (t in 1:T) {
+        print(paste0("t", t))
+        #x <- xList[[t]]
         x <- xList[[t]]
+        print(paste0("str(xList[[t]]: ", str(x)))
+        #print(paste0("WRONGxList[[t]]", str(XList[[t]])))
+        #print("end cycle t")
         y <- yList[[t]]
         sum_y1L[[t]] <- sum(y, na.rm=TRUE);  sum_y2L[[t]] <- sum(y^2, na.rm=TRUE)
         sum_xyL[[t]] <- sum(x*y, na.rm=TRUE)
