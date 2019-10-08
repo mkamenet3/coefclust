@@ -7,13 +7,13 @@
 List.C.Data(DMatrix, MR)
 }
 \arguments{
-\item{DMatrix}{Distance matrix}
+\item{DMatrix}{Distance matrix.}
 
 \item{MR}{Maximum radius.}
 }
 \value{
-Matrix
+A matrix.
 }
 \description{
-Construct  a list of all possible clusters where r <= MR for each center.
+Construct a list of all possible clusters where r <= MR for each center.
 }
