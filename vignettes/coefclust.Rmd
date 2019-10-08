@@ -16,7 +16,6 @@ First, load the `coefclust` package and the `geosphere` package.
 
 ```{r}
 library(coefclust)
-library(geosphere)
 ```
 
 Next load the toy dataset that comes with the package, *SoutheastFakeData*:
