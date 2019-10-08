@@ -1,26 +1,3 @@
-#Last Update: 2019/09/07
-###################################################################################################
-# setwd("C:/01.ACADEMY/03.UWM/SPATIAL/SpatialCluster/MyFunctions")
-#setwd("C:/JUNO/SpatialCluster/MyFunctions")
-#source("../R/FunctionMLC_LL_TMP.R")
-#source("FunctionMLC_LL.R")
-
-# if (!require(Matrix)) {
-#   install.packages("Matrix")
-#   library(Matrix)
-# }
-
-###################################################################################################
-# Test.MLC.SI.ID.ST(yList, XList, cdataL, M, ID, overlap)                                     #####
-### Find and Test the Cylindrical Spatio-Temporal Cluster for given ID via SImulataneous Detection
-#### yList: The input data(in the List of Vectors Format)
-#### XList: The input data(in the List of Matrices Format)
-#### cdataL: Pre-defined cdata list which is from List.C.Data(DMatrix,MR)
-#### M : number of simulations
-#### ID: Indices for potential centroids
-#### overlap: Boolean which is TRUE for overlapping clusters / FALSE for non-overlapping clusters
-###################################################################################################
-
 #'@title Test.MLC.SI.ID.ST
 #'@description Find and test the cylindrical spatio-temporal cluster for given ID via simulataneous detection.
 #'@param yList The input data (as a list of vectors).
@@ -103,18 +80,6 @@ Test.MLC.SI.ID.ST <- function(yList, XList, cdataL, M, ID, overlap) {
   c(Mlc, maxF=TestStat[1], pval=pval)
 }
 
-###################################################################################################
-# Find.Clusters.SI.ST(yList, XList, long, lat, MR, M, overlap, alpha)                         #####
-### Find multiple cylindrical spatio-temporal clusters sequentially via SImulataneous detection.
-### Find and Test the Cluster in the Simple Linear Regression for given potential centroids.
-#### yList: The input data(in the List of Vectors Format)
-#### XList: The input data(in the List of Matrices Format)
-#### long: longitude
-#### lat:  latitude
-#### M : number of simulations
-#### overlap: Boolean which is TRUE for overlapping clusters / FALSE for non-overlapping clusters
-#### alpha : significance level
-###################################################################################################
 
 #'@title Find.Clusters.SI.ST
 #'@description Find multiple cylindrical spatio-temporal clusters sequentially via simultaneous detection. Find and test the cluster in the simple linear regression for given potential centroids.
@@ -199,11 +164,6 @@ Find.Clusters.SI.ST <- function(yList, XList, long, lat, MR, M, overlap, alpha) 
 }
 
 
-###################################################################################################
-# Fit.Model.Clusters.ST                                                                       #####
-### lm Fit the model with detected clusters
-### Clusters: the output from "Find.Clusters.SI.ST"
-###################################################################################################
 
 #'@title Fit.Model.Clusters.ST
 #'@description Fit a simple linear regression model with detected clusters.
@@ -257,9 +217,7 @@ Fit.Model.Clusters.ST <- function(yList, XList, long, lat, Clusters) {
   lm(model, data = data_cls)
 }
 
-###################################################################################################
-# Est.Coeff.SI.ST                                                                             #####
-###################################################################################################
+
 #'@title Est.Coeff.SI.ST
 #'@description Estimate coefficients via simultaneous detection.
 #'@param yList The input data (as a list of vectors).
@@ -324,4 +282,3 @@ Est.Coeff.SI.ST <- function(yList, XList, long, lat, Clusters) {
   return(list(Coeff_History = Coef, Coeff_Table = Coeff_Table))
 }
 
-###################################################################################################
