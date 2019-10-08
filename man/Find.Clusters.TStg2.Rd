@@ -26,9 +26,9 @@ Find.Clusters.TStg2(y, X, long, lat, MR, M, Cls1st, overlap, alpha)
 \item{alpha}{significance level}
 }
 \value{
-list of cluster, coefficient
+list of cluster, coefficient, and indicator of cluster membership.
 }
 \description{
-Find multiple clusters sequentially via SImulataneous detection.
+Find multiple clusters sequentially via Simulataneous detection.
 Find and test the cluster in the simple linear regression for given potential centroids via the 2nd stage in Two-stage detection: the same slope but different intercept.
 }

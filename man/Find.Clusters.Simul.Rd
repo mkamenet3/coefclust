@@ -24,7 +24,7 @@ Find.Clusters.Simul(y, X, long, lat, MR, M, overlap, alpha)
 \item{alpha}{significance level}
 }
 \value{
-list of cluster, coefficient
+list of cluster, coefficient, and indicator of cluster membership.
 }
 \description{
 Find multiple clusters sequentially via simulataneous detection.

@@ -1,16 +1,17 @@
 
 #'@title List.C.Data
-#'@description Construct  a list of all possible clusters where r <= MR for each center.
-#'@param DMatrix Distance matrix
+#'@description Construct a list of all possible clusters where r <= MR for each center.
+#'@param DMatrix Distance matrix.
 #'@param MR Maximum radius.
-#'@return Matrix
+#'@return A matrix.
+#'@export
 List.C.Data <- function(DMatrix,MR) {
   cdata <- list()
   N <- dim(DMatrix)[1]
   for (k in 1:N) {
-    dat.k <- data.frame(center=k, id=c(1:N), r=DMatrix[,k])
-    dat.k1 <- subset(dat.k, r <= MR)
-    dat.k1 <- dat.k1[order(dat.k1$r, dat.k1$id),]
+    dat.k <- data.frame(center=k, id=c(1:N), rad=DMatrix[,k])
+    dat.k1 <- subset(dat.k, rad <= MR)
+    dat.k1 <- dat.k1[order(dat.k1$rad, dat.k1$id),]
     cdata[[k]] <- dat.k1
   }
   return(cdata)
@@ -435,7 +436,7 @@ MLC.CDL.ID.1AOVbi <- function(y, X, cdataL, ID, overlap) {
 #'@export
 MLC.CDL.ID.SL.ST <- function(yList, XList, cdataL, ID, overlap) {
     mlc <- NULL
-    T <- length(XList)
+    Time <- length(XList)
     N <- dim(XList[[1]])[1]; p <- dim(XList[[1]])[2]
 
     wholeID <- 1:N                             # Update: 2015/06/22
@@ -444,7 +445,7 @@ MLC.CDL.ID.SL.ST <- function(yList, XList, cdataL, ID, overlap) {
     # compute sum(y_it), sum(y_it^2), sum(x_it), sum(x_it^2), sum(x_it*y_it) for each t=1,...T fot all i=1,...,N
     # Updated 2016/02/29
     sum_y1L <- list();  sum_y2L <- list();  sum_x1L <- list();  sum_x2L <- list();  sum_xyL <- list();
-    for (t in 1:T) {
+    for (t in 1:Time) {
         y <- yList[[t]]
         x <- XList[[t]][,p]; x[is.na(y)] <- NA
         sum_y1L[[t]] <- sum(y, na.rm=TRUE);  sum_y2L[[t]] <- sum(y^2, na.rm=TRUE)
@@ -465,7 +466,7 @@ MLC.CDL.ID.SL.ST <- function(yList, XList, cdataL, ID, overlap) {
 
         if (!is.null(dim(dat.k)) && dim(dat.k)[1] > p) {  # Updated 2015/07/11
             SSE.kList <- list()
-            for (t in 1:T) {
+            for (t in 1:Time) {
                 sum_y1 <- sum_y1L[[t]];  sum_y2 <- sum_y2L[[t]]
                 sum_x1 <- sum_x1L[[t]];  sum_x2 <- sum_x2L[[t]]
                 sum_xy <- sum_xyL[[t]]
@@ -529,20 +530,20 @@ MLC.CDL.ID.SL.ST <- function(yList, XList, cdataL, ID, overlap) {
 #'@param cs.xxL.L List of pre-computed \code{cs.xx} list which is from \code{cum.sum.scalar1(xc)}.
 #'@param ID Indices for potential centroids.
 #'@param overlap  Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters
+#'@param Time Number of time periods.
+#'@param N Number of centroids (subregions).
+#'@param p Number of dimensions of original XList.
 #'@return Most likely cluster (defined by center and radius) and SSE (error sum of squares).
 #'@export
-MLC.CDL2.ID.SL.ST <- function(yList, xList, cdataL, sum_x1L, sum_x2L, cs.xxL.L, ID, overlap) {
+MLC.CDL2.ID.SL.ST <- function(yList, xList, cdataL, sum_x1L, sum_x2L, cs.xxL.L, ID, overlap, Time, N, p) {
     mlc <- NULL
-    T <- length(XList)
-    N <- dim(XList[[1]])[1]; p <- dim(XList[[1]])[2]
-
     wholeID <- 1:N                             # Update: 2015/06/22
     nonID <- wholeID[!(wholeID %in% ID)]       # Update: 2015/06/22
 
     # compute sum(y_it), sum(y_it^2), sum(x_it*y_it) for each t=1,...T fot all i=1,...,N
     # Updated 2016/03/01
     sum_y1L <- list();  sum_y2L <- list();  sum_xyL <- list();
-    for (t in 1:T) {
+    for (t in 1:Time) {
         x <- xList[[t]]
         y <- yList[[t]]
         sum_y1L[[t]] <- sum(y, na.rm=TRUE);  sum_y2L[[t]] <- sum(y^2, na.rm=TRUE)
@@ -562,7 +563,7 @@ MLC.CDL2.ID.SL.ST <- function(yList, xList, cdataL, sum_x1L, sum_x2L, cs.xxL.L, 
 
         if (!is.null(dim(dat.k)) && dim(dat.k)[1] > p) {  # Update: 2015/06/22
             SSE.kList <- list()
-            for (t in 1:T) {
+            for (t in 1:Time) {
                 sum_y1 <- sum_y1L[[t]];  sum_y2 <- sum_y2L[[t]]
                 sum_x1 <- sum_x1L[[t]];  sum_x2 <- sum_x2L[[t]]
                 sum_xy <- sum_xyL[[t]]
@@ -616,7 +617,7 @@ MLC.CDL2.ID.SL.ST <- function(yList, xList, cdataL, sum_x1L, sum_x2L, cs.xxL.L, 
 #'@title Fstat.CDL.ID.SL1.ST
 #'@description Find the spatio-temporal cluster estimate in the simple linear regression for given potential centroids in the slope: different slope and different intercept.
 #'@param yList The input data (as a list of vectors).
-#'@param xList The input data (as a list of matrices).
+#'@param XList The input data (as a list of matrices).
 #'@param cdataL Pre-defined cdata list which is from \code{List.C.Data(DMatrix,MR)}.
 #'@param ID Indices for potential centroids.
 #'@param overlap  Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters
@@ -626,7 +627,7 @@ MLC.CDL2.ID.SL.ST <- function(yList, xList, cdataL, sum_x1L, sum_x2L, cs.xxL.L, 
 
 Fstat.CDL.ID.SL1.ST <- function(yList, XList, cdataL, ID, overlap) {
     mlc <- NULL
-    T <- length(XList)
+    Time <- length(XList)
     N <- dim(XList[[1]])[1]; p <- dim(XList[[1]])[2]
 
     wholeID <- 1:N                             # Update: 2015/06/22
@@ -635,8 +636,8 @@ Fstat.CDL.ID.SL1.ST <- function(yList, XList, cdataL, ID, overlap) {
     # compute sum(y_it), sum(y_it^2), sum(x_it), sum(x_it^2), sum(x_it*y_it) for each t=1,...T fot all i=1,...,N
     # Updated 2016/02/29
     sum_y1L <- list();  sum_y2L <- list();  sum_x1L <- list();  sum_x2L <- list();  sum_xyL <- list();
-    n_na_y <- rep(0,T)      # number of is.na(y_t)  # Update: 2016/03/05
-    for (t in 1:T) {
+    n_na_y <- rep(0,Time)      # number of is.na(y_t)  # Update: 2016/03/05
+    for (t in 1:Time) {
         y <- yList[[t]]
         x <- XList[[t]][,p]; x[is.na(y)] <- NA
         sum_y1L[[t]] <- sum(y, na.rm=TRUE);  sum_y2L[[t]] <- sum(y^2, na.rm=TRUE)
@@ -658,7 +659,7 @@ Fstat.CDL.ID.SL1.ST <- function(yList, XList, cdataL, ID, overlap) {
 
         if (!is.null(dim(dat.k)) && dim(dat.k)[1] > p) {
             SSE1.kList <- SSE2.kList <- list()
-            for (t in 1:T) {
+            for (t in 1:Time) {
                 sum_y1 <- sum_y1L[[t]];  sum_y2 <- sum_y2L[[t]]
                 sum_x1 <- sum_x1L[[t]];  sum_x2 <- sum_x2L[[t]]
                 sum_xy <- sum_xyL[[t]]
@@ -697,7 +698,7 @@ Fstat.CDL.ID.SL1.ST <- function(yList, XList, cdataL, ID, overlap) {
             # compute SSEs and Fslope
             dat.k$SSE1 <- Reduce("+",SSE1.kList)
             dat.k$SSE2 <- Reduce("+",SSE2.kList)
-            dat.k$Fslope <- ((dat.k$SSE1 - dat.k$SSE2)/(T))/(dat.k$SSE2/((N-4)*T-sum(n_na_y)))  # Updated 2016/03/05
+            dat.k$Fslope <- ((dat.k$SSE1 - dat.k$SSE2)/(Time))/(dat.k$SSE2/((N-4)*Time-sum(n_na_y)))  # Updated 2016/03/05
 
             # Remove -Inf which is in case of all x's are the same
             dat.k2 <- as.matrix(dat.k[dat.k$dr!=0 & dat.k$Fslope > 0,])
@@ -719,7 +720,7 @@ Fstat.CDL.ID.SL1.ST <- function(yList, XList, cdataL, ID, overlap) {
     Mlc <- mlc[order(-mlc[,d2])[1],]
 
     # unbiased est of sigSq under Null Hypothesis (H1)
-    sigSq1 <- Mlc[3]/((N-3)*T-sum(n_na_y))                             # Updated 2016/03/05
+    sigSq1 <- Mlc[3]/((N-3)*Time-sum(n_na_y))                             # Updated 2016/03/05
     names(sigSq1) <- NULL
 
     return(list(Mlc = Mlc[-(3:4)], mlc = mlc, sigSq1 = sigSq1))        # Updated 2016/03/05
@@ -730,7 +731,7 @@ Fstat.CDL.ID.SL1.ST <- function(yList, XList, cdataL, ID, overlap) {
 #'@title Fstat.CDL.ID.SL2.ST
 #'@description Find the spatio-temporal cluster estimate in the simple linear regression for given potential centroids in the intercept only: the same slope but different intercept.
 #'@param yList The input data (as a list of vectors).
-#'@param xList The input data (as a list of matrices).
+#'@param XList The input data (as a list of matrices).
 #'@param cdataL Pre-defined cdata list which is from \code{List.C.Data(DMatrix,MR)}.
 #'@param ID Indices for potential centroids.
 #'@param overlap  Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters
@@ -739,7 +740,7 @@ Fstat.CDL.ID.SL1.ST <- function(yList, XList, cdataL, ID, overlap) {
 #'
 Fstat.CDL.ID.SL2.ST <- function(yList, XList, cdataL, ID, overlap) {
     mlc <- NULL
-    T <- length(XList)
+    Time <- length(XList)
     N <- dim(XList[[1]])[1]; p <- dim(XList[[1]])[2]
 
     wholeID <- 1:N                             # Update: 2015/06/22
@@ -748,8 +749,8 @@ Fstat.CDL.ID.SL2.ST <- function(yList, XList, cdataL, ID, overlap) {
     # compute sum(y_it), sum(y_it^2), sum(x_it), sum(x_it^2), sum(x_it*y_it) for each t=1,...T fot all i=1,...,N
     # Updated 2016/02/29
     sum_y1L <- list();  sum_y2L <- list();  sum_x1L <- list();  sum_x2L <- list();  sum_xyL <- list();
-    n_na_y <- rep(0,T)      # number of is.na(y_t)  # Update: 2016/03/05
-    for (t in 1:T) {
+    n_na_y <- rep(0,Time)      # number of is.na(y_t)  # Update: 2016/03/05
+    for (t in 1:Time) {
         y <- yList[[t]]
         x <- XList[[t]][,p]; x[is.na(y)] <- NA
         sum_y1L[[t]] <- sum(y, na.rm=TRUE);  sum_y2L[[t]] <- sum(y^2, na.rm=TRUE)
@@ -771,7 +772,7 @@ Fstat.CDL.ID.SL2.ST <- function(yList, XList, cdataL, ID, overlap) {
 
         if (!is.null(dim(dat.k)) && dim(dat.k)[1] >= p) {  # the same slope / different intercept
             SSE1.kList <- list()
-            for (t in 1:T) {
+            for (t in 1:Time) {
                 sum_y1 <- sum_y1L[[t]];  sum_y2 <- sum_y2L[[t]]
                 sum_x1 <- sum_x1L[[t]];  sum_x2 <- sum_x2L[[t]]
                 sum_xy <- sum_xyL[[t]]
@@ -833,7 +834,7 @@ Fstat.CDL.ID.SL2.ST <- function(yList, XList, cdataL, ID, overlap) {
 #'@title TStg.CDL.ID.SL.ST
 #'@description Find the spatio-temporal cluster estimate in the simple linear regression for given potential centroids in the slope (1st Stage) and the intercept (2nd stage).
 #'@param yList The input data (as a list of vectors).
-#'@param xList The input data (as a list of matrices).
+#'@param XList The input data (as a list of matrices).
 #'@param cdataL Pre-defined cdata list which is from \code{List.C.Data(DMatrix,MR)}.
 #'@param ID Indices for potential centroids.
 #'@param overlap  Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters
@@ -841,7 +842,7 @@ Fstat.CDL.ID.SL2.ST <- function(yList, XList, cdataL, ID, overlap) {
 #'@export
 TStg.CDL.ID.SL.ST <- function(yList, XList, cdataL, ID, overlap) {
     mlc_slp <- mlc_int <- NULL
-    T <- length(XList)
+    Time <- length(XList)
     N <- dim(XList[[1]])[1]; p <- dim(XList[[1]])[2]
 
     wholeID <- 1:N                             # Update: 2015/06/22
@@ -850,8 +851,8 @@ TStg.CDL.ID.SL.ST <- function(yList, XList, cdataL, ID, overlap) {
     # compute sum(y_it), sum(y_it^2), sum(x_it), sum(x_it^2), sum(x_it*y_it) for each t=1,...T fot all i=1,...,N
     # Updated 2016/02/29
     sum_y1L <- list();  sum_y2L <- list();  sum_x1L <- list();  sum_x2L <- list();  sum_xyL <- list();
-    n_na_y <- rep(0,T)      # number of is.na(y_t)  # Update: 2016/03/05
-    for (t in 1:T) {
+    n_na_y <- rep(0,Time)      # number of is.na(y_t)  # Update: 2016/03/05
+    for (t in 1:Time) {
         y <- yList[[t]]
         x <- XList[[t]][,p]; x[is.na(y)] <- NA
         sum_y1L[[t]] <- sum(y, na.rm=TRUE);  sum_y2L[[t]] <- sum(y^2, na.rm=TRUE)
@@ -873,7 +874,7 @@ TStg.CDL.ID.SL.ST <- function(yList, XList, cdataL, ID, overlap) {
 
         if (!is.null(dim(dat.k)) && dim(dat.k)[1] > p) {
             SSE1_slp.kList <- SSE1_int.kList <- SSE2.kList <- list()
-            for (t in 1:T) {
+            for (t in 1:Time) {
                 sum_y1 <- sum_y1L[[t]];  sum_y2 <- sum_y2L[[t]]
                 sum_x1 <- sum_x1L[[t]];  sum_x2 <- sum_x2L[[t]]
                 sum_xy <- sum_xyL[[t]]
@@ -925,8 +926,8 @@ TStg.CDL.ID.SL.ST <- function(yList, XList, cdataL, ID, overlap) {
             dat.k$SSE1_slp <- Reduce("+",SSE1_slp.kList)
             dat.k$SSE1_int <- Reduce("+",SSE1_int.kList)
             dat.k$SSE2 <- Reduce("+",SSE2.kList)
-            dat.k$F_slp <- ((dat.k$SSE1_slp - dat.k$SSE2)/(T))/(dat.k$SSE2/((N-4)*T-sum(n_na_y)))  # Updated 2016/04/29
-            dat.k$F_int <- ((dat.k$SSE1_int - dat.k$SSE2)/(T))/(dat.k$SSE2/((N-4)*T-sum(n_na_y)))  # Updated 2016/04/29
+            dat.k$F_slp <- ((dat.k$SSE1_slp - dat.k$SSE2)/(Time))/(dat.k$SSE2/((N-4)*Time-sum(n_na_y)))  # Updated 2016/04/29
+            dat.k$F_int <- ((dat.k$SSE1_int - dat.k$SSE2)/(Time))/(dat.k$SSE2/((N-4)*Time-sum(n_na_y)))  # Updated 2016/04/29
 
             # Remove -Inf which is in case of all x's are the same
             dat.k2 <- as.matrix(dat.k[dat.k$dr!=0 & dat.k$SSE1_slp > 0,])
@@ -955,8 +956,8 @@ TStg.CDL.ID.SL.ST <- function(yList, XList, cdataL, ID, overlap) {
     Mlc_int <- mlc_int[order(-mlc_int[,d2_int])[1],]
 
     # unbiased est of sigSq under Null Hypothesis (H1)
-    sigSq1_slp <- Mlc_slp[3]/((N-3)*T-sum(n_na_y))                             # Updated 2016/04/29
-    sigSq1_int <- Mlc_int[3]/((N-3)*T-sum(n_na_y))                             # Updated 2016/04/29
+    sigSq1_slp <- Mlc_slp[3]/((N-3)*Time-sum(n_na_y))                             # Updated 2016/04/29
+    sigSq1_int <- Mlc_int[3]/((N-3)*Time-sum(n_na_y))                             # Updated 2016/04/29
 
     names(sigSq1_slp) <- NULL
     names(sigSq1_int) <- NULL
