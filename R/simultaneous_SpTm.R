@@ -99,7 +99,7 @@ Find.Clusters.SI.ST <- function(yList, XList, long, lat, MR, M, overlap, alpha) 
   T <- length(XList)
   ID <- 1:N
   LL <- cbind(long, lat)
-  DMatrix <- distm(LL)/1000
+  DMatrix <- geosphere::distm(LL)/1000
   cdataL <- List.C.Data(DMatrix,MR)
 
   print("Finding 1st Cluster")
@@ -111,7 +111,7 @@ Find.Clusters.SI.ST <- function(yList, XList, long, lat, MR, M, overlap, alpha) 
   clsL <- list()    # a list of indicator for each cluster
   n_cls <- 1        # number of clusters
 
-  d_tmp <- distm(cbind(long,lat), c(long[cent_tmp],lat[cent_tmp]))/1000
+  d_tmp <- geosphere::distm(cbind(long,lat), c(long[cent_tmp],lat[cent_tmp]))/1000
   clsL[[n_cls]]  <- as.vector(d_tmp <= C_tmp[2])
   ID_tmp <- ID[ID != cent_tmp]
 
@@ -136,8 +136,8 @@ Find.Clusters.SI.ST <- function(yList, XList, long, lat, MR, M, overlap, alpha) 
 
     n_cls <- n_cls + 1
 
-    d_tmp1 <- distm(cbind(long,lat), c(long[cent_tmp],lat[cent_tmp]))/1000
-    d_tmp2 <- distm(cbind(long[ID_tmp],lat[ID_tmp]), c(long[cent_tmp],lat[cent_tmp]))/1000
+    d_tmp1 <- geosphere::distm(cbind(long,lat), c(long[cent_tmp],lat[cent_tmp]))/1000
+    d_tmp2 <- geosphere::distm(cbind(long[ID_tmp],lat[ID_tmp]), c(long[cent_tmp],lat[cent_tmp]))/1000
     clsL[[n_cls]]  <- as.vector((d_tmp1 <= C_tmp[2]))
     ID_tmp <- ID_tmp[ID_tmp != cent_tmp]
 
@@ -193,7 +193,7 @@ Fit.Model.Clusters.ST <- function(yList, XList, long, lat, Clusters) {
         modelList[[t]] <- paste(modelList[[t]], paste(" + c", j, "_", 0:(p-1), "_t", t, sep="", collapse = ""), sep="")
         cent_tmp <- Clusters[j,1]
         r_tmp <- Clusters[j,2]
-        d_tmp <- distm(cbind(long,lat), c(long[cent_tmp],lat[cent_tmp]))/1000
+        d_tmp <- geosphere::distm(cbind(long,lat), c(long[cent_tmp],lat[cent_tmp]))/1000
         clsL[[j]]  <- as.vector(d_tmp <= r_tmp)
         WList[[t]] <- cbind(WList[[t]],XList[[t]]*(clsL[[j]]))
       }
@@ -246,7 +246,7 @@ Est.Coeff.SI.ST <- function(yList, XList, long, lat, Clusters) {
     for (j in 1:n_cls) {
       cent_tmp <- Clusters[j,1]
       r_tmp <- Clusters[j,2]
-      d_tmp <- distm(cbind(long,lat), c(long[cent_tmp],lat[cent_tmp]))/1000
+      d_tmp <- geosphere::distm(cbind(long,lat), c(long[cent_tmp],lat[cent_tmp]))/1000
       clsL[[j]]  <- as.vector(d_tmp <= r_tmp)
       for (t in 1:T) {
         XList_cls[[t]] <- XList[[t]]*(clsL[[j]])

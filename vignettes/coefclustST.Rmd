@@ -18,21 +18,14 @@ First, load the `coefclust` package and the `geosphere` package.
 
 ```{r}
 set.seed(1)
-# library(coefclust)
-# library(geosphere)
+library(coefclust)
 ```
 
-First, load the `coefclust` package.
-
-```{r}
-#TODOD
-```
 
 Load in the toy dataset for the spatio-temporal analysis that comes from the package, *SE_FakeData_SpTM*. Explore the dataset using the `str()` function:
 
 ```{r}
-###################################################################################################
-load("../data/SE_FakeData_SpTm.RData")
+data("SE_FakeData_SpTm")
 str(SE_FakeData_SpTm)
 ```
 

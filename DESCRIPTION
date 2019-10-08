@@ -13,7 +13,6 @@ Imports:
     graphics,
     utils,
     knitr,
-    Rcpp,
     Matrix
 VignetteBuilder: knitr
 License: GPL (>=2)
