@@ -1,27 +1,3 @@
-#Last Update: 2019/09/09
-###################################################################################################
-# setwd("C:/01.ACADEMY/03.UWM/SPATIAL/SpatialCluster/MyFunctions")
-#setwd("C:/JUNO/SpatialCluster/MyFunctions")
-#source("FunctionMLC_LL_TMP.R")
-
-##source("FunctionMLC_LL.R")
-#
-# if (!require(Matrix)) {
-#   install.packages("Matrix")
-#   library(Matrix)
-# }
-
-###################################################################################################
-# Test.MLC.TS.ID.ST1(yList, XList, cdataL, M, ID, overlap)                                    #####
-### Find and Test the Cylindrical Spatio-Temporal Cluster in the slopes for given ID
-###      via Two Stages Detection (in the 1st Stage)
-#### yList: The input data(in the List of Vectors Format)
-#### XList: The input data(in the List of Matrices Format)
-#### cdataL: Pre-defined cdata list which is from List.C.Data(DMatrix,MR)
-#### M : number of simulations
-#### ID: Indices for potential centroids
-#### overlap: Boolean which is TRUE for overlapping clusters / FALSE for non-overlapping clusters
-###################################################################################################
 #'@title Test.MLC.TS.ID.ST1
 #'@description Find and test the cylindrical spatio-temporal cluster in the slopes for given ID via two-stage detection (in the 1st Stage).
 #'@param yList The input data (as a list of vectors).
@@ -73,19 +49,6 @@ Test.MLC.TS.ID.ST1 <- function(yList, XList, cdataL, M, ID, overlap) {
   c(Mlc, pval=pval)
 }
 
-
-###################################################################################################
-# Find.Clusters.TS.ST1(yList, XList, long, lat, MR, M, overlap, alpha)                        #####
-### Find Multiple (Overlapping) Cylindrical Spatio-Temporal Clusters Sequentially in the slopes
-###      via Two Stages Detection (in the 1st Stage)
-#### yList: The input data(in the List of Vectors Format)
-#### XList: The input data(in the List of Matrices Format)
-#### long: longitude
-#### lat:  latitude
-#### M : number of simulations
-#### overlap: Boolean which is TRUE for overlapping clusters / FALSE for non-overlapping clusters
-#### alpha : significance level
-###################################################################################################
 
 #'@title Find.Clusters.TS.ST1
 #'@description Find multiple (overlapping) cylindrical spatio-temporal clusters sequentially in the slopes via two-stage detection (in the 1st #'@param yList The input data (as a list of vectors).
@@ -174,17 +137,6 @@ Find.Clusters.TS.ST1 <- function(yList, XList, long, lat, MR, M, overlap, alpha)
 }
 
 
-###################################################################################################
-# Test.MLC.TS.ID.ST2(yList, XList, cdataL, M, ID, overlap)                                    #####
-### Find and Test the Cylindrical Spatio-Temporal Cluster in the intercepts for given ID
-###      via Two Stages Detection (in the 2nd Stage)
-#### yList: The input data(in the List of Vectors Format)
-#### XList: The input data(in the List of Matrices Format)
-#### cdataL: Pre-defined cdata list which is from List.C.Data(DMatrix,MR)
-#### M : number of simulations
-#### ID: Indices for potential centroids
-#### overlap: Boolean which is TRUE for overlapping clusters / FALSE for non-overlapping clusters
-###################################################################################################
 
 #'@title Test.MLC.TS.ID.ST2
 #'@description Find and test the cylindrical spatio-temporal cluster in the intercepts for given ID via two-stages detection (in the 2nd Stage).
@@ -236,20 +188,6 @@ Test.MLC.TS.ID.ST2 <- function(yList, XList, cdataL, M, ID, overlap) {
   c(Mlc, pval=pval)
 }
 
-
-###################################################################################################
-# Find.Clusters.TS.ST2(yList, XList, long, lat, MR, M, Cls1st, overlap, alpha)                #####
-### Find Multiple (Overlapping) Cylindrical Spatio-Temporal Clusters Sequentially in the intercepts
-###      via Two Stages Detection (in the 2nd Stage)
-#### yList: The input data(in the List of Vectors Format)
-#### XList: The input data(in the List of Matrices Format)
-#### long: longitude
-#### lat:  latitude
-#### M : number of simulations
-#### Cls1st: the output from "Find.Clusters.TS.ST1" in the 1st Stage
-#### overlap: Boolean which is TRUE for overlapping clusters / FALSE for non-overlapping clusters
-#### alpha : significance level
-###################################################################################################
 
 #'@title Find.Clusters.TS.ST2
 #'@description Find multiple (overlapping) cylindrical spatio-temporal clusters sequentially in the intercepts via two-stages detection (in the 2nd stage)
@@ -360,11 +298,6 @@ Find.Clusters.TS.ST2 <- function(yList, XList, long, lat, MR, M, Cls1st, overlap
   return(list(Clusters = Clusters, Coef = Coef, Indicator = clsL))
 }
 
-###################################################################################################
-# Fit.Model.Clusters.ST                                                                       #####
-### lm Fit the model with detected clusters
-### Clusters: the output from "Find.Clusters.TS.ST1" and "Find.Clusters.TS.ST2"
-###################################################################################################
 
 #'@title Fit.Model.Clusters.ST
 #'@description Fit a simple linear regression model with detected clusters.
@@ -416,9 +349,7 @@ Fit.Model.Clusters.TS.ST <- function(yList, XList, Cls1st, Cls2nd) {
   lm(model, data = data_cls)
 }
 
-###################################################################################################
-# Est.Coeff.TS.ST(yList, XList, Cls1stIndicator, Cls2ndIndicator)                             #####
-###################################################################################################
+
 #'@title Est.Coeff.SI.ST
 #'@description Estimate coefficients via two-stage detection.
 #'@param yList The input data (as a list of vectors).
@@ -490,4 +421,4 @@ Est.Coeff.TS.ST <- function(yList, XList, Cls1stIndicator, Cls2ndIndicator) {
   return(list(Coeff_History = Coef, Coeff_Table = Coeff_Table))
 }
 
-###################################################################################################
+
