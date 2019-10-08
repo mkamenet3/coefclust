@@ -2,13 +2,15 @@
 #'@description Find and test the cylindrical spatio-temporal cluster in the slopes for given ID via two-stage detection (in the 1st Stage).
 #'@param yList The input data (as a list of vectors).
 #'@param XList The input data (as a list of matrices).
+#'@param long Longitude.
+#'@param lat Latitude.
 #'@param cdataL Pre-defined cdata list which is from \code{List.C.Data(DMatrix,MR)}.
 #'@param M Number of simulations
 #'@param ID Indices for potential centroids.
 #'@param overlap  Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters
 #'@return Most likely cluster, maximum F-statistic (of all simulations), and associated p-value.
 #'
-Test.MLC.TS.ID.ST1 <- function(yList, XList, cdataL, M, ID, overlap) {
+Test.MLC.TS.ID.ST1 <- function(yList, XList, long, lat, cdataL, M, ID, overlap) {
   TestStat <- rep(NA,M+1)
   N <- dim(XList[[1]])[1]; p <- dim(XList[[1]])[2]
   T <- length(XList)
@@ -72,7 +74,8 @@ Find.Clusters.TS.ST1 <- function(yList, XList, long, lat, MR, M, overlap, alpha)
   cdataL <- List.C.Data(DMatrix,MR)
 
   print("Finding 1st Cluster")
-  time_tmp <- system.time(C_tmp <- Test.MLC.TS.ID.ST1(yList, XList, cdataL, M, ID, overlap))
+  #time_tmp <- system.time(C_tmp <- Test.MLC.TS.ID.ST1(yList, XList, cdataL, M, ID, overlap))
+  time_tmp <- system.time(C_tmp <- Test.MLC.TS.ID.ST1(yList, XList, long, lat ,cdataL, M, ID, overlap))
   Clusters <- rbind(c(C_tmp,time_tmp[3]/60), NULL)    # Update: 2019/09/08
 
   l <- length(C_tmp)
@@ -101,7 +104,8 @@ Find.Clusters.TS.ST1 <- function(yList, XList, long, lat, MR, M, overlap, alpha)
 
   while (pval_tmp < alpha) {
     print(paste("Finding ", n_cls + 1, "th Cluster", sep=""))
-    time_tmp <- system.time(C_tmp <- Test.MLC.TS.ID.ST1(yList_tmp, XList, cdataL, M, ID_tmp, overlap))
+    #time_tmp <- system.time(C_tmp <- Test.MLC.TS.ID.ST1(yList_tmp, XList, cdataL, M, ID_tmp, overlap))
+      time_tmp <- system.time(C_tmp <- Test.MLC.TS.ID.ST1(yList_tmp, XList, long, lat, cdataL, M, ID_tmp, overlap))
     Clusters <- rbind(Clusters,c(C_tmp,time_tmp[3]/60))
     pval_tmp <- C_tmp[l]
     cent_tmp <- C_tmp[1]
