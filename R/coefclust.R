@@ -620,7 +620,7 @@ MLC.CDL2.ID.SL.ST <- function(yList, xList, cdataL, sum_x1L, sum_x2L, cs.xxL.L, 
 #'@param cdataL Pre-defined cdata list which is from \code{List.C.Data(DMatrix,MR)}.
 #'@param ID Indices for potential centroids.
 #'@param overlap  Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters
-#'@return Most likely cluster (defined by center and radius), SSE (error sum of squares) 1 and 2, maximum F-statistic of the slope.
+#'@return Most likely cluster (defined by center and radius), sum of squared errors 1 (from model which has clusters in intercept only), sum of squared errors 2 (from the model which has the cluster in both the intercept and slope), maximum F-statistic of the slope.
 #'@export
 
 
@@ -734,7 +734,7 @@ Fstat.CDL.ID.SL1.ST <- function(yList, XList, cdataL, ID, overlap) {
 #'@param cdataL Pre-defined cdata list which is from \code{List.C.Data(DMatrix,MR)}.
 #'@param ID Indices for potential centroids.
 #'@param overlap  Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters
-#'@return Most likely cluster (defined by center and radius), SSE (error sum of squares) 1.
+#'@return Most likely cluster (defined by center and radius), sum of squared errors 1 (from model which has clusters in intercept only).
 #'@export
 #'
 Fstat.CDL.ID.SL2.ST <- function(yList, XList, cdataL, ID, overlap) {
@@ -837,7 +837,7 @@ Fstat.CDL.ID.SL2.ST <- function(yList, XList, cdataL, ID, overlap) {
 #'@param cdataL Pre-defined cdata list which is from \code{List.C.Data(DMatrix,MR)}.
 #'@param ID Indices for potential centroids.
 #'@param overlap  Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters
-#'@return List of most likely clusters. First element contains information for the most likely cluster based on slope. The second element contains information for the most likely cluster based on intercept. For each element (slope and intercept), MLC center and radius, SSE (error sum of squares) for the slope/intercept, SSE 2, and max F-statistic for the slope/intercept.
+#'@return List of most likely clusters. First element contains information for the most likely cluster based on slope. The second element contains information for the most likely cluster based on intercept. For each element (slope and intercept), MLC center and radius, SSE (error sum of squares) for the slope/intercept, sum of squared error (from the model which has the cluster in both the intercept and slope), and max F-statistic for the slope/intercept.
 #'@export
 TStg.CDL.ID.SL.ST <- function(yList, XList, cdataL, ID, overlap) {
     mlc_slp <- mlc_int <- NULL
