@@ -13,7 +13,7 @@ Test.Cluster.TStg1.SL <- function(y, X, cdataL, M, ID, overlap) {
   T <- rep(NA,M+1)
   N <- dim(X)[1]; p <- dim(X)[2]
 
-  Mlc <- DC.TStg1.SL(y, X, cdataL, ID, overlap)$Mlc
+  Mlc <- Fstat.CDL.ID.SL1(y, X, cdataL, ID, overlap)$Mlc
   l <- length(Mlc)
 
   # F statistic of the Slope with (df1,df2) = (1,N-2p)
@@ -27,7 +27,7 @@ Test.Cluster.TStg1.SL <- function(y, X, cdataL, M, ID, overlap) {
 
   for (k in 1:M) {
     e_k   <- rnorm(N, mean = 0, sd = sqrt(sigSq0))
-    Fstat_k <- DC.TStg1.SL(e_k, X, cdataL, ID, overlap)$Mlc[l]
+    Fstat_k <- Fstat.CDL.ID.SL1(e_k, X, cdataL, ID, overlap)$Mlc[l]
     T[k+1]<- Fstat_k
   }
 
@@ -153,7 +153,7 @@ Find.Clusters.TStg1 <- function(y, X, long, lat, MR, M, overlap, alpha) {
 Test.Cluster.TStg2.SL <- function(y, X, cdataL, M, ID, overlap) {
   T <- rep(NA,M+1)
   N <- dim(X)[1]; p <- dim(X)[2]
-  Mlc <- DC.TStg2.SL(y, X, cdataL, ID, overlap)$Mlc
+  Mlc <- Fstat.CDL.ID.SL2(y, X, cdataL, ID, overlap)$Mlc
   l <- length(Mlc)
 
   P <- X%*%solve(t(X)%*%X)%*%t(X)
@@ -167,7 +167,7 @@ Test.Cluster.TStg2.SL <- function(y, X, cdataL, M, ID, overlap) {
 
   for (k in 1:M) {
     e_k   <- rnorm(N, mean = 0, sd = sqrt(sigSq0))
-    s2_k <- DC.TStg2.SL(e_k, X, cdataL, ID, overlap)$Mlc[l]
+    s2_k <- Fstat.CDL.ID.SL2(e_k, X, cdataL, ID, overlap)$Mlc[l]
     T[k+1]<- ((t(e_k)%*%IP%*%e_k/N - s2_k)/1)/(s2_k/(N-3))
   }
 
