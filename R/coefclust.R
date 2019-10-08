@@ -9,9 +9,9 @@ List.C.Data <- function(DMatrix,MR) {
   cdata <- list()
   N <- dim(DMatrix)[1]
   for (k in 1:N) {
-    dat.k <- data.frame(center=k, id=c(1:N), r=DMatrix[,k])
-    dat.k1 <- subset(dat.k, r <= MR)
-    dat.k1 <- dat.k1[order(dat.k1$r, dat.k1$id),]
+    dat.k <- data.frame(center=k, id=c(1:N), rad=DMatrix[,k])
+    dat.k1 <- subset(dat.k, rad <= MR)
+    dat.k1 <- dat.k1[order(dat.k1$rad, dat.k1$id),]
     cdata[[k]] <- dat.k1
   }
   return(cdata)
@@ -534,8 +534,8 @@ MLC.CDL.ID.SL.ST <- function(yList, XList, cdataL, ID, overlap) {
 #'@export
 MLC.CDL2.ID.SL.ST <- function(yList, xList, cdataL, sum_x1L, sum_x2L, cs.xxL.L, ID, overlap) {
     mlc <- NULL
-    T <- length(XList)
-    N <- dim(XList[[1]])[1]; p <- dim(XList[[1]])[2]
+    T <- length(xList)
+    N <- dim(xList[[1]])[1]; p <- dim(xList[[1]])[2]
 
     wholeID <- 1:N                             # Update: 2015/06/22
     nonID <- wholeID[!(wholeID %in% ID)]       # Update: 2015/06/22
@@ -617,7 +617,7 @@ MLC.CDL2.ID.SL.ST <- function(yList, xList, cdataL, sum_x1L, sum_x2L, cs.xxL.L, 
 #'@title Fstat.CDL.ID.SL1.ST
 #'@description Find the spatio-temporal cluster estimate in the simple linear regression for given potential centroids in the slope: different slope and different intercept.
 #'@param yList The input data (as a list of vectors).
-#'@param xList The input data (as a list of matrices).
+#'@param XList The input data (as a list of matrices).
 #'@param cdataL Pre-defined cdata list which is from \code{List.C.Data(DMatrix,MR)}.
 #'@param ID Indices for potential centroids.
 #'@param overlap  Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters
@@ -731,7 +731,7 @@ Fstat.CDL.ID.SL1.ST <- function(yList, XList, cdataL, ID, overlap) {
 #'@title Fstat.CDL.ID.SL2.ST
 #'@description Find the spatio-temporal cluster estimate in the simple linear regression for given potential centroids in the intercept only: the same slope but different intercept.
 #'@param yList The input data (as a list of vectors).
-#'@param xList The input data (as a list of matrices).
+#'@param XList The input data (as a list of matrices).
 #'@param cdataL Pre-defined cdata list which is from \code{List.C.Data(DMatrix,MR)}.
 #'@param ID Indices for potential centroids.
 #'@param overlap  Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters
@@ -834,7 +834,7 @@ Fstat.CDL.ID.SL2.ST <- function(yList, XList, cdataL, ID, overlap) {
 #'@title TStg.CDL.ID.SL.ST
 #'@description Find the spatio-temporal cluster estimate in the simple linear regression for given potential centroids in the slope (1st Stage) and the intercept (2nd stage).
 #'@param yList The input data (as a list of vectors).
-#'@param xList The input data (as a list of matrices).
+#'@param XList The input data (as a list of matrices).
 #'@param cdataL Pre-defined cdata list which is from \code{List.C.Data(DMatrix,MR)}.
 #'@param ID Indices for potential centroids.
 #'@param overlap  Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters

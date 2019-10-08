@@ -26,7 +26,7 @@ Test.Cluster.TStg1.SL <- function(y, X, cdataL, M, ID, overlap) {
   sigSq0 <- t(e_vec)%*%e_vec/N
 
   for (k in 1:M) {
-    e_k   <- rnorm(N, mean = 0, sd = sqrt(sigSq0))
+    e_k   <- stats::rnorm(N, mean = 0, sd = sqrt(sigSq0))
     Fstat_k <- Fstat.CDL.ID.SL1(e_k, X, cdataL, ID, overlap)$Mlc[l]
     T[k+1]<- Fstat_k
   }
@@ -166,7 +166,7 @@ Test.Cluster.TStg2.SL <- function(y, X, cdataL, M, ID, overlap) {
   T[1]  <- ((sigSq0 - Mlc[l])/1)/(Mlc[l]/(N-3))
 
   for (k in 1:M) {
-    e_k   <- rnorm(N, mean = 0, sd = sqrt(sigSq0))
+    e_k   <- stats::rnorm(N, mean = 0, sd = sqrt(sigSq0))
     s2_k <- Fstat.CDL.ID.SL2(e_k, X, cdataL, ID, overlap)$Mlc[l]
     T[k+1]<- ((t(e_k)%*%IP%*%e_k/N - s2_k)/1)/(s2_k/(N-3))
   }

@@ -35,7 +35,7 @@ Test.Cluster.Simul.SL <- function(y, X, cdataL, M, ID, overlap) {
   }
 
   for (k in 1:M) {
-    e_k   <- rnorm(N, mean = 0, sd = sqrt(sigSq0))
+    e_k   <- stats::rnorm(N, mean = 0, sd = sqrt(sigSq0))
     s2_k  <- MLC.CDL2.ID.SL(e_k, x, cdataL, sum_x1, sum_x2, cs.xxL, ID, overlap)$Mlc[l]
     T[k+1]<- ((t(e_k)%*%IP%*%e_k/N - s2_k)/p)/(s2_k/(N-2*p))
   }

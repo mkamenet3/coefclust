@@ -38,7 +38,7 @@ Test.MLC.TS.ID.ST1 <- function(yList, XList, cdataL, M, ID, overlap) {
   for (k in 1:M) {
     yList_k <- list()
     for (t in 1:T) {
-      e_k <- rnorm(N, mean = 0, sd = sqrt(sigSq1))
+      e_k <- stats::rnorm(N, mean = 0, sd = sqrt(sigSq1))
       e_k[is.na(yList[[t]])] <- NA
       yList_k[[t]] <- EyList[[t]] + e_k
     }
@@ -51,13 +51,13 @@ Test.MLC.TS.ID.ST1 <- function(yList, XList, cdataL, M, ID, overlap) {
 
 
 #'@title Find.Clusters.TS.ST1
-#'@description Find multiple (overlapping) cylindrical spatio-temporal clusters sequentially in the slopes via two-stage detection (in the 1st #'@param yList The input data (as a list of vectors).
+#'@description Find multiple (overlapping) cylindrical spatio-temporal clusters sequentially in the slopes via two-stage detection (in the 1st stage).
+#'@param yList The input data (as a list of vectors).
 #'@param XList The input data (as a list of matrices).
 #'@param long longitude.
 #'@param lat latitude.
 #'@param MR Maximum radius.
 #'@param M Number of simulations.
-#'@param ID Indices for potential centroids.
 #'@param overlap  Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters.
 #'@param alpha Significance level
 #'@return List of clusters, coefficients, and indicator of cluster membership.
@@ -141,7 +141,7 @@ Find.Clusters.TS.ST1 <- function(yList, XList, long, lat, MR, M, overlap, alpha)
 #'@title Test.MLC.TS.ID.ST2
 #'@description Find and test the cylindrical spatio-temporal cluster in the intercepts for given ID via two-stages detection (in the 2nd Stage).
 #'@param yList The input data (as a list of vectors).
-#'@param xList The input data (as a list of matrices).
+#'@param XList The input data (as a list of matrices).
 #'@param cdataL Pre-defined cdata list which is from \code{List.C.Data(DMatrix,MR)}.
 #'@param M Number of simulations
 #'@param ID Indices for potential centroids.
@@ -177,7 +177,7 @@ Test.MLC.TS.ID.ST2 <- function(yList, XList, cdataL, M, ID, overlap) {
   for (k in 1:M) {
     yList_k <- list()
     for (t in 1:T) {
-      e_k <- rnorm(N, mean = 0, sd = sqrt(sigSq1))
+      e_k <- stats::rnorm(N, mean = 0, sd = sqrt(sigSq1))
       e_k[is.na(yList[[t]])] <- NA
       yList_k[[t]] <- EyList[[t]] + e_k
     }
@@ -340,13 +340,13 @@ Fit.Model.Clusters.TS.ST <- function(yList, XList, Cls1st, Cls2nd) {
     coeff_names <- c(coeff_names, coeff_namesList[[t]])
     model <- paste(model, modelList[[t]], sep="")
     y <- c(y,yList[[t]])
-    W <- as.matrix(bdiag(W,WList[[t]]))
+    W <- as.matrix(Matrix::bdiag(W,WList[[t]]))
   }
   W <- W[-1,-1]
 
   data_cls <- data.frame(y,W)
   colnames(data_cls) <- c("y", coeff_names)
-  lm(model, data = data_cls)
+  stats::lm(model, data = data_cls)
 }
 
 
@@ -355,7 +355,7 @@ Fit.Model.Clusters.TS.ST <- function(yList, XList, Cls1st, Cls2nd) {
 #'@param yList The input data (as a list of vectors).
 #'@param XList The input data (as a list of matrices).
 #'@param Cls1stIndicator Indicator of clusters identified in stage 1.
-#'@param Cls2ndIndicatorIndicator Indicator of clusters identified in stage 2.
+#'@param Cls2ndIndicator Indicator of clusters identified in stage 2.
 #'@return List of coefficients
 Est.Coeff.TS.ST <- function(yList, XList, Cls1stIndicator, Cls2ndIndicator) {
   WList <- XList

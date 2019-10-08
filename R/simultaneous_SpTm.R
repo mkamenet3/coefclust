@@ -66,7 +66,7 @@ Test.MLC.SI.ID.ST <- function(yList, XList, cdataL, M, ID, overlap) {
     eList_k <- list()
     SSE_0 <- 0
     for (t in 1:T) {
-      e_k <- rnorm(N, mean = 0, sd = sqrt(sigSq0))
+      e_k <- stats::rnorm(N, mean = 0, sd = sqrt(sigSq0))
       e_k[is.na(yList[[t]])] <- NA
       eList_k[[t]] <- e_k
       e_valid <- e_k[!is.na(e_k)]
@@ -89,7 +89,6 @@ Test.MLC.SI.ID.ST <- function(yList, XList, cdataL, M, ID, overlap) {
 #'@param lat latitude.
 #'@param MR Maximum radius.
 #'@param M Number of simulations.
-#'@param ID Indices for potential centroids.
 #'@param overlap  Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters.
 #'@param alpha Significance level
 #'@return List of clusters, coefficients, and indicator of cluster membership.
@@ -208,13 +207,13 @@ Fit.Model.Clusters.ST <- function(yList, XList, long, lat, Clusters) {
     coeff_names <- c(coeff_names, coeff_namesList[[t]])
     model <- paste(model, modelList[[t]], sep="")
     y <- c(y,yList[[t]])
-    W <- as.matrix(bdiag(W,WList[[t]]))
+    W <- as.matrix(Matrix::bdiag(W,WList[[t]]))
   }
   W <- W[-1,-1]
 
   data_cls <- data.frame(y,W)
   colnames(data_cls) <- c("y", coeff_names)
-  lm(model, data = data_cls)
+  stats::lm(model, data = data_cls)
 }
 
 
