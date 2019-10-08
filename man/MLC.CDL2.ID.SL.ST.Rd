@@ -5,7 +5,7 @@
 \title{MLC.CDL2.ID.SL.ST}
 \usage{
 MLC.CDL2.ID.SL.ST(yList, xList, cdataL, sum_x1L, sum_x2L, cs.xxL.L, ID,
-  overlap)
+  overlap, Time, N, p)
 }
 \arguments{
 \item{yList}{The input data (as a list of vectors).}
@@ -23,6 +23,12 @@ MLC.CDL2.ID.SL.ST(yList, xList, cdataL, sum_x1L, sum_x2L, cs.xxL.L, ID,
 \item{ID}{Indices for potential centroids.}
 
 \item{overlap}{Boolean which is \code{TRUE} for overlapping clusters / \code{FALSE} for non-overlapping clusters}
+
+\item{Time}{Number of time periods.}
+
+\item{N}{Number of centroids (subregions).}
+
+\item{p}{Number of dimensions of original XList.}
 }
 \value{
 Most likely cluster (defined by center and radius) and SSE (error sum of squares).

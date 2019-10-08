@@ -19,7 +19,6 @@ First, load the `coefclust` package.
 ```{r}
 set.seed(1)
 library(coefclust)
-library(geosphere)
 ```
 
 
