@@ -354,8 +354,8 @@ Fit.Model.Clusters.TS.ST <- function(yList, XList, Cls1st, Cls2nd) {
 #'@description Estimate coefficients via two-stage detection.
 #'@param yList The input data (as a list of vectors).
 #'@param XList The input data (as a list of matrices).
-#'@param Cls1stIndicator Indicator of clusters identified in stage 1}.
-#'@param Cls2ndIndicatorIndicator Indicator of clusters identified in stage 2}.
+#'@param Cls1stIndicator Indicator of clusters identified in stage 1.
+#'@param Cls2ndIndicatorIndicator Indicator of clusters identified in stage 2.
 #'@return List of coefficients
 Est.Coeff.TS.ST <- function(yList, XList, Cls1stIndicator, Cls2ndIndicator) {
   WList <- XList

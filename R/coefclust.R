@@ -1,9 +1,10 @@
 
 #'@title List.C.Data
-#'@description Construct  a list of all possible clusters where r <= MR for each center.
-#'@param DMatrix Distance matrix
+#'@description Construct a list of all possible clusters where r <= MR for each center.
+#'@param DMatrix Distance matrix.
 #'@param MR Maximum radius.
-#'@return Matrix
+#'@return A matrix.
+#'@export
 List.C.Data <- function(DMatrix,MR) {
   cdata <- list()
   N <- dim(DMatrix)[1]
