@@ -10,7 +10,7 @@
 #'@return Most likely cluster, maximum F-statistic (of all simulations), and associated p-value.
 #'@export
 Test.Cluster.Simul.SL <- function(y, X, cdataL, M, ID, overlap) {
-  T <- rep(NA,M+1)
+  Time <- rep(NA,M+1)
   N <- dim(X)[1]; p <- dim(X)[2]
 
   Mlc <- MLC.CDL.ID.SL(y, X, cdataL, ID, overlap)$Mlc
@@ -23,7 +23,7 @@ Test.Cluster.Simul.SL <- function(y, X, cdataL, M, ID, overlap) {
   sigSq0 <- t(e_vec)%*%e_vec/N
 
   # F statistic with (df1,df2) = (p,N-2p)
-  T[1]  <- ((sigSq0 - Mlc[l])/p)/(Mlc[l]/(N-2*p))
+  Time[1]  <- ((sigSq0 - Mlc[l])/p)/(Mlc[l]/(N-2*p))
 
   x <- X[,p]
   sum_x1 <- sum(x);  sum_x2 <- sum(x^2)
@@ -37,11 +37,11 @@ Test.Cluster.Simul.SL <- function(y, X, cdataL, M, ID, overlap) {
   for (k in 1:M) {
     e_k   <- stats::rnorm(N, mean = 0, sd = sqrt(sigSq0))
     s2_k  <- MLC.CDL2.ID.SL(e_k, x, cdataL, sum_x1, sum_x2, cs.xxL, ID, overlap)$Mlc[l]
-    T[k+1]<- ((t(e_k)%*%IP%*%e_k/N - s2_k)/p)/(s2_k/(N-2*p))
+    Time[k+1]<- ((t(e_k)%*%IP%*%e_k/N - s2_k)/p)/(s2_k/(N-2*p))
   }
 
-  pval <- (rank(-T)[1])/(M+1)
-  c(Mlc, maxF=T[1], pval=pval)
+  pval <- (rank(-Time)[1])/(M+1)
+  c(Mlc, maxF=Time[1], pval=pval)
 }
 
 

@@ -10,14 +10,14 @@
 #'@return Most likely cluster, maximum F-statistic (of all simulations), and associated p-value.
 #'@export
 Test.Cluster.TStg1.SL <- function(y, X, cdataL, M, ID, overlap) {
-  T <- rep(NA,M+1)
+  Time <- rep(NA,M+1)
   N <- dim(X)[1]; p <- dim(X)[2]
 
   Mlc <- Fstat.CDL.ID.SL1(y, X, cdataL, ID, overlap)$Mlc
   l <- length(Mlc)
 
   # F statistic of the Slope with (df1,df2) = (1,N-2p)
-  T[1]  <- Mlc[l]
+  Time[1]  <- Mlc[l]
 
   P <- X%*%solve(t(X)%*%X)%*%t(X)
   IP <- diag(N) - P
@@ -28,10 +28,10 @@ Test.Cluster.TStg1.SL <- function(y, X, cdataL, M, ID, overlap) {
   for (k in 1:M) {
     e_k   <- stats::rnorm(N, mean = 0, sd = sqrt(sigSq0))
     Fstat_k <- Fstat.CDL.ID.SL1(e_k, X, cdataL, ID, overlap)$Mlc[l]
-    T[k+1]<- Fstat_k
+    Time[k+1]<- Fstat_k
   }
 
-  pval <- (rank(-T)[1])/(M+1)
+  pval <- (rank(-Time)[1])/(M+1)
   c(Mlc, pval=pval)
 }
 
@@ -151,7 +151,7 @@ Find.Clusters.TStg1 <- function(y, X, long, lat, MR, M, overlap, alpha) {
 #'@export
 
 Test.Cluster.TStg2.SL <- function(y, X, cdataL, M, ID, overlap) {
-  T <- rep(NA,M+1)
+  Time <- rep(NA,M+1)
   N <- dim(X)[1]; p <- dim(X)[2]
   Mlc <- Fstat.CDL.ID.SL2(y, X, cdataL, ID, overlap)$Mlc
   l <- length(Mlc)
@@ -163,16 +163,16 @@ Test.Cluster.TStg2.SL <- function(y, X, cdataL, M, ID, overlap) {
   sigSq0 <- t(e_vec)%*%e_vec/N
 
   # F statistic with (df1,df2) = (1,N-3)
-  T[1]  <- ((sigSq0 - Mlc[l])/1)/(Mlc[l]/(N-3))
+  Time[1]  <- ((sigSq0 - Mlc[l])/1)/(Mlc[l]/(N-3))
 
   for (k in 1:M) {
     e_k   <- stats::rnorm(N, mean = 0, sd = sqrt(sigSq0))
     s2_k <- Fstat.CDL.ID.SL2(e_k, X, cdataL, ID, overlap)$Mlc[l]
-    T[k+1]<- ((t(e_k)%*%IP%*%e_k/N - s2_k)/1)/(s2_k/(N-3))
+    Time[k+1]<- ((t(e_k)%*%IP%*%e_k/N - s2_k)/1)/(s2_k/(N-3))
   }
 
-  pval <- (rank(-T)[1])/(M+1)
-  c(Mlc, maxFstat.0=T[1], pval=pval)
+  pval <- (rank(-Time)[1])/(M+1)
+  c(Mlc, maxFstat.0=Time[1], pval=pval)
 }
 
 

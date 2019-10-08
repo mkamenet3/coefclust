@@ -13,7 +13,7 @@
 Test.MLC.TS.ID.ST1 <- function(yList, XList, long, lat, cdataL, M, ID, overlap) {
   TestStat <- rep(NA,M+1)
   N <- dim(XList[[1]])[1]; p <- dim(XList[[1]])[2]
-  T <- length(XList)
+  Time <- length(XList)
 
   MlcSlope <- TStg.CDL.ID.SL.ST(yList, XList, cdataL, ID, overlap)
   Mlc <- MlcSlope$Mlc_slp
@@ -28,7 +28,7 @@ Test.MLC.TS.ID.ST1 <- function(yList, XList, long, lat, cdataL, M, ID, overlap) 
   cluster  <- as.vector((d_tmp1 <= r_tmp))
 
   EyList <- list()
-  for (t in 1:T) {
+  for (t in 1:Time) {
     yt <- yList[[t]]
     Wt <- cbind(XList[[t]],cluster*1)
     yt_valid <- yt[!is.na(yt)]
@@ -39,7 +39,7 @@ Test.MLC.TS.ID.ST1 <- function(yList, XList, long, lat, cdataL, M, ID, overlap) 
 
   for (k in 1:M) {
     yList_k <- list()
-    for (t in 1:T) {
+    for (t in 1:Time) {
       e_k <- stats::rnorm(N, mean = 0, sd = sqrt(sigSq1))
       e_k[is.na(yList[[t]])] <- NA
       yList_k[[t]] <- EyList[[t]] + e_k
@@ -67,13 +67,13 @@ Test.MLC.TS.ID.ST1 <- function(yList, XList, long, lat, cdataL, M, ID, overlap) 
 #'
 Find.Clusters.TS.ST1 <- function(yList, XList, long, lat, MR, M, overlap, alpha) {
   N <- dim(XList[[1]])[1]; p <- dim(XList[[1]])[2]
-  T <- length(XList)
+  Time <- length(XList)
   ID <- 1:N
   LL <- cbind(long, lat)
   DMatrix <- geosphere::distm(LL)/1000
   cdataL <- List.C.Data(DMatrix,MR)
 
-  print("Finding 1st Cluster")
+  message("Finding 1st Cluster")
   #time_tmp <- system.time(C_tmp <- Test.MLC.TS.ID.ST1(yList, XList, cdataL, M, ID, overlap))
   time_tmp <- system.time(C_tmp <- Test.MLC.TS.ID.ST1(yList, XList, long, lat ,cdataL, M, ID, overlap))
   Clusters <- rbind(c(C_tmp,time_tmp[3]/60), NULL)    # Update: 2019/09/08
@@ -91,7 +91,7 @@ Find.Clusters.TS.ST1 <- function(yList, XList, long, lat, MR, M, overlap, alpha)
   ID_tmp <- ID[ID != cent_tmp]
 
   yList_tmp <- list()
-  for (t in 1:T) {
+  for (t in 1:Time) {
     yt <- yList[[t]]
     Xt <- XList[[t]]
     Xt_cls <- Xt*(clsL[[n_cls]])
@@ -103,7 +103,7 @@ Find.Clusters.TS.ST1 <- function(yList, XList, long, lat, MR, M, overlap, alpha)
   }
 
   while (pval_tmp < alpha) {
-    print(paste("Finding ", n_cls + 1, "th Cluster", sep=""))
+    message(paste("Finding ", n_cls + 1, "th Cluster", sep=""))
     #time_tmp <- system.time(C_tmp <- Test.MLC.TS.ID.ST1(yList_tmp, XList, cdataL, M, ID_tmp, overlap))
       time_tmp <- system.time(C_tmp <- Test.MLC.TS.ID.ST1(yList_tmp, XList, long, lat, cdataL, M, ID_tmp, overlap))
     Clusters <- rbind(Clusters,c(C_tmp,time_tmp[3]/60))
@@ -118,7 +118,7 @@ Find.Clusters.TS.ST1 <- function(yList, XList, long, lat, MR, M, overlap, alpha)
     clsL[[n_cls]]  <- as.vector((d_tmp1 <= r_tmp))
     ID_tmp <- ID_tmp[ID_tmp != cent_tmp]
 
-    for (t in 1:T) {
+    for (t in 1:Time) {
       yt <- yList_tmp[[t]]
       Xt <- XList[[t]]
       Xt_cls <- Xt*(clsL[[n_cls]])
@@ -156,7 +156,7 @@ Find.Clusters.TS.ST1 <- function(yList, XList, long, lat, MR, M, overlap, alpha)
 Test.MLC.TS.ID.ST2 <- function(yList, XList, long, lat, cdataL, M, ID, overlap) {
   TestStat <- rep(NA,M+1)
   N <- dim(XList[[1]])[1]; p <- dim(XList[[1]])[2]
-  T <- length(XList)
+  Time <- length(XList)
 
   MlcSlope <- TStg.CDL.ID.SL.ST(yList, XList, cdataL, ID, overlap)
   Mlc <- MlcSlope$Mlc_int
@@ -171,7 +171,7 @@ Test.MLC.TS.ID.ST2 <- function(yList, XList, long, lat, cdataL, M, ID, overlap) 
   cluster  <- as.vector((d_tmp1 <= r_tmp))
 
   EyList <- list()
-  for (t in 1:T) {
+  for (t in 1:Time) {
     yt <- yList[[t]]
     Wt <- cbind(XList[[t]],XList[[t]][,2]*cluster)
     yt_valid <- yt[!is.na(yt)]
@@ -182,7 +182,7 @@ Test.MLC.TS.ID.ST2 <- function(yList, XList, long, lat, cdataL, M, ID, overlap) 
 
   for (k in 1:M) {
     yList_k <- list()
-    for (t in 1:T) {
+    for (t in 1:Time) {
       e_k <- stats::rnorm(N, mean = 0, sd = sqrt(sigSq1))
       e_k[is.na(yList[[t]])] <- NA
       yList_k[[t]] <- EyList[[t]] + e_k
@@ -211,7 +211,7 @@ Test.MLC.TS.ID.ST2 <- function(yList, XList, long, lat, cdataL, M, ID, overlap) 
 #'
 Find.Clusters.TS.ST2 <- function(yList, XList, long, lat, MR, M, Cls1st, overlap, alpha) {
   N <- dim(XList[[1]])[1]; p <- dim(XList[[1]])[2]
-  T <- length(XList)
+  Time <- length(XList)
   ID <- 1:N
   LL <- cbind(long, lat)
   DMatrix <- geosphere::distm(LL)/1000
@@ -232,12 +232,12 @@ Find.Clusters.TS.ST2 <- function(yList, XList, long, lat, MR, M, Cls1st, overlap
       d_tmp1 <- geosphere::distm(cbind(long,lat), c(long[cent_tmp],lat[cent_tmp]))/1000
       d_tmp2 <- geosphere::distm(cbind(long[ID_tmp],lat[ID_tmp]), c(long[cent_tmp],lat[cent_tmp]))/1000
       ID_tmp <- ID_tmp[ID_tmp != cent_tmp]
-      for (t in 1:T) {
+      for (t in 1:Time) {
         WList[[t]] <- cbind(WList[[t]],XList[[t]]*(clsL[[j]]))
       }
     }
 
-    for (t in 1:T) {
+    for (t in 1:Time) {
       yt <- yList_tmp[[t]]
       Wt <- WList[[t]]
       yt_valid <- yt[!is.na(yt)]
@@ -250,7 +250,7 @@ Find.Clusters.TS.ST2 <- function(yList, XList, long, lat, MR, M, Cls1st, overlap
   pval_tmp <- 0
   Clusters <- NULL
   while (pval_tmp < alpha) {
-    print(paste("Finding ", n_cls + 1, "th Cluster", sep=""))
+    message(paste("Finding ", n_cls + 1, "th Cluster", sep=""))
     #time_tmp <- system.time(C_tmp <- Test.MLC.TS.ID.ST2(yList_tmp, XList, cdataL, M, ID_tmp, overlap))
     time_tmp <- system.time(C_tmp <- Test.MLC.TS.ID.ST2(yList_tmp, XList, long, lat, cdataL, M, ID_tmp, overlap))
     Clusters <- rbind(Clusters,c(C_tmp,time_tmp[3]/60))
@@ -266,7 +266,7 @@ Find.Clusters.TS.ST2 <- function(yList, XList, long, lat, MR, M, Cls1st, overlap
     clsL[[n_cls]]  <- as.vector((d_tmp1 <= r_tmp))
     ID_tmp <- ID_tmp[ID_tmp != cent_tmp]
 
-    for (t in 1:T) {
+    for (t in 1:Time) {
       yt <- yList_tmp[[t]]
       Xt <- XList[[t]]
       Xt_cls <- Xt*(clsL[[n_cls]])
@@ -320,18 +320,18 @@ Fit.Model.Clusters.TS.ST <- function(yList, XList, Cls1st, Cls2nd) {
   n_cls1 <- length(Cls1st$Indicator) - 1       # number of clusters in the 1st Stage
   n_cls2 <- length(clsL) - n_cls1- 1              # number of clusters in the 2nd Stage
   n_cls <- n_cls1 + n_cls2
-  p <- dim(XList[[1]])[2]; T <- length(XList)
+  p <- dim(XList[[1]])[2]; Time <- length(XList)
 
   coeff_namesList <- list()
   modelList <- list()
-  for (t in 1:T) {
+  for (t in 1:Time) {
     coeff_namesList[[t]] <- paste("b0_", 0:(p-1), "_t", t, sep="")   # names for the prameter estimates
     modelList[[t]] <- paste(" + b0_", 0:(p-1), "_t", t, sep="", collapse = "")  # model to fit
   }
 
   if (n_cls > 0) {
     for (j in 1:n_cls) {
-      for (t in 1:T) {
+      for (t in 1:Time) {
         coeff_namesList[[t]][(p*j+1):(p*j+p)] <- paste("c", j, "_", 0:(p-1), "_t", t, sep="")
         modelList[[t]] <- paste(modelList[[t]], paste(" + c", j, "_", 0:(p-1), "_t", t, sep="", collapse = ""), sep="")
         WList[[t]] <- cbind(WList[[t]],XList[[t]]*(clsL[[j]]))
@@ -343,7 +343,7 @@ Fit.Model.Clusters.TS.ST <- function(yList, XList, Cls1st, Cls2nd) {
   model <- "y ~ -1"
   y <- NULL
   W <- 181818
-  for (t in 1:T) {
+  for (t in 1:Time) {
     coeff_names <- c(coeff_names, coeff_namesList[[t]])
     model <- paste(model, modelList[[t]], sep="")
     y <- c(y,yList[[t]])
@@ -369,11 +369,11 @@ Est.Coeff.TS.ST <- function(yList, XList, Cls1stIndicator, Cls2ndIndicator) {
   clsL <- Cls2ndIndicator
   n_cls1 <- length(Cls1stIndicator) - 1       # number of clusters in the 1st Stage
   n_cls2 <- length(clsL) - n_cls1               # number of clusters in the 2nd Stage # Update: 2019/09/09
-  p <- dim(XList[[1]])[2]; T <- length(XList)
+  p <- dim(XList[[1]])[2]; Time <- length(XList)
 
   b_tmp <- list()
   coef_tmp <- list()
-  for (t in 1:T) {
+  for (t in 1:Time) {
     b_tmp[[t]] <- solve(t(XList[[t]])%*%XList[[t]])%*%t(XList[[t]])%*%yList[[t]]
     coef_tmp[[t]] <- c(b_tmp[[t]],rep(NA,length(b_tmp[[t]])))
   }
@@ -382,7 +382,7 @@ Est.Coeff.TS.ST <- function(yList, XList, Cls1stIndicator, Cls2ndIndicator) {
   yList_tmp <- yList
   if (n_cls1 > 0) {
     for (j in 1:n_cls1) {
-      for (t in 1:T) {
+      for (t in 1:Time) {
         XList_cls[[t]] <- XList[[t]]*(clsL[[j]])
         WList[[t]] <- cbind(XList[[t]],XList_cls[[t]])
         b_tmp[[t]] <- solve(t(WList[[t]])%*%WList[[t]])%*%t(WList[[t]])%*%yList_tmp[[t]]
@@ -394,7 +394,7 @@ Est.Coeff.TS.ST <- function(yList, XList, Cls1stIndicator, Cls2ndIndicator) {
 
   if (n_cls2 > 0) {
     for (j in 1:n_cls2) {
-      for (t in 1:T) {
+      for (t in 1:Time) {
         WList[[t]] <- cbind(XList[[t]],1*(clsL[[j+n_cls1]]))
         b_tmp[[t]] <- solve(t(WList[[t]])%*%WList[[t]])%*%t(WList[[t]])%*%yList_tmp[[t]]
         coef_tmp[[t]] <- cbind(coef_tmp[[t]], c(b_tmp[[t]],0))
@@ -405,7 +405,7 @@ Est.Coeff.TS.ST <- function(yList, XList, Cls1stIndicator, Cls2ndIndicator) {
 
   n_cls <- n_cls1 + n_cls2
   Coef <- list()
-  for (t in 1:T) {
+  for (t in 1:Time) {
     Coef[[t]] <- cbind(coef_tmp[[t]][1:p,1:n_cls],NULL)
     coef_names <- c("beta_0","beta_1")
     if (n_cls > 1) {                             # Update: 2019/09/07
