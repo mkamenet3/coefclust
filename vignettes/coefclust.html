@@ -94,9 +94,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 
-<p>First, load the <code>coefclust</code> package and the <code>geosphere</code> package.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(coefclust)
-<span class="kw">library</span>(geosphere)</code></pre></div>
+<p>First, load the <code>coefclust</code> package.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(coefclust)</code></pre></div>
 <p>Next load the toy dataset that comes with the package, <em>SoutheastFakeData</em>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;SE_FakeData&quot;</span>)
 <span class="kw">str</span>(SE_FakeData)</code></pre></div>
@@ -130,7 +129,7 @@ M &lt;-<span class="st"> </span><span class="dv">2</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Clusters_sim &lt;-<span class="st"> </span><span class="kw">Find.Clusters.Simul</span>(y, X, long, lat, MR, M, <span class="dt">overlap=</span><span class="ot">TRUE</span>, <span class="dt">alpha=</span><span class="fl">0.05</span>)
 <span class="kw">str</span>(Clusters_sim)</code></pre></div>
 <pre><code>## List of 3
-##  $ Clusters: num [1, 1:5] 11 92.8697 0.3333 0.0178 16
+##  $ Clusters: num [1, 1:5] 11 92.8697 0.3333 0.0302 16
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2
 ##   .. ..$ : NULL
 ##   .. ..$ : chr [1:5] &quot;center&quot; &quot;radius&quot; &quot;pval&quot; &quot;elapsed&quot; ...
@@ -142,7 +141,7 @@ M &lt;-<span class="st"> </span><span class="dv">2</span></code></pre></div>
 ##   ..$ : logi [1:616] TRUE FALSE FALSE TRUE FALSE FALSE ...</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Clusters_sim<span class="op">$</span>Clusters</code></pre></div>
 <pre><code>##      center   radius      pval    elapsed n_obs
-## [1,]     11 92.86966 0.3333333 0.01783333    16</code></pre>
+## [1,]     11 92.86966 0.3333333 0.03016667    16</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Clusters_sim<span class="op">$</span>Coef</code></pre></div>
 <pre><code>##                 0
 ## beta_0 0.08902763
@@ -156,7 +155,7 @@ M &lt;-<span class="st"> </span><span class="dv">2</span></code></pre></div>
 <p>To identify the cluster by it’s county name, we can column bind the information from the <code>SE_FakeData</code> dataset with the identified cluster information:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cbind</span>(SE_FakeData[Clusters_sim<span class="op">$</span>Clusters[,<span class="dv">1</span>],<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>],Clusters_sim<span class="op">$</span>Clusters)</code></pre></div>
 <pre><code>##      State  County center   radius      pval    elapsed n_obs
-## 11 Alabama Chilton     11 92.86966 0.3333333 0.01783333    16</code></pre>
+## 11 Alabama Chilton     11 92.86966 0.3333333 0.03016667    16</code></pre>
 </div>
 <div id="find-multiple-clusters-sequentially-via-the-two-stage-detection" class="section level2">
 <h2>Find Multiple Clusters Sequentially via the Two-Stage Detection</h2>
@@ -170,7 +169,7 @@ Clusters_ts2 &lt;-<span class="st"> </span><span class="kw">Find.Clusters.TStg2<
 <span class="co">#Explore identified clusters (via two-stage detection)</span>
 Clusters_ts2<span class="op">$</span>Clusters</code></pre></div>
 <pre><code>##      center   radius      pval elapsed n_obs stage
-## [1,]     11 92.86966 0.3333333    0.02    16     1</code></pre>
+## [1,]     11 92.86966 0.3333333  0.0235    16     1</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Clusters_ts2<span class="op">$</span>Coef</code></pre></div>
 <pre><code>##                 0
 ## beta_0 0.08902763
@@ -184,7 +183,7 @@ Clusters_ts2<span class="op">$</span>Clusters</code></pre></div>
 <p>To identify the cluster by it’s county name, we can column bind the information from the <code>SE_FakeData</code> dataset with the identified cluster information:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cbind</span>(SE_FakeData[Clusters_ts2<span class="op">$</span>Clusters[,<span class="dv">1</span>],<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>],Clusters_ts2<span class="op">$</span>Clusters)</code></pre></div>
 <pre><code>##      State  County center   radius      pval elapsed n_obs stage
-## 11 Alabama Chilton     11 92.86966 0.3333333    0.02    16     1</code></pre>
+## 11 Alabama Chilton     11 92.86966 0.3333333  0.0235    16     1</code></pre>
 </div>
 
 
