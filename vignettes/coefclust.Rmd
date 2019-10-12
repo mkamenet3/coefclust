@@ -12,7 +12,7 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 ```
 
-First, load the `coefclust` package and the `geosphere` package.
+First, load the `coefclust` package.
 
 ```{r}
 library(coefclust)
