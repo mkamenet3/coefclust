@@ -18,3 +18,16 @@ Fit.Model.Clusters.TS.ST(yList, XList, Cls1st, Cls2nd)
 \description{
 Fit a simple linear regression model with detected clusters.
 }
+\examples{
+data("SE_FakeData_SpTm")
+long <- SE_FakeData_SpTm$long; lat <- SE_FakeData_SpTm$lat
+yList <-list()
+yList[[1]] <- SE_FakeData_SpTm$y1; yList[[2]] <- SE_FakeData_SpTm$y2; yList[[3]] <- SE_FakeData_SpTm$y3
+XList <-list()
+XList[[1]] <- cbind(rep(1,length(long)), SE_FakeData_SpTm$x1); XList[[2]] <- cbind(rep(1,length(long)), SE_FakeData_SpTm$x2); XList[[3]] <- cbind(rep(1,length(long)), SE_FakeData_SpTm$x3)
+MR <- 300; M <- 2
+Clusters_ts1N <- Find.Clusters.TS.ST1(yList, XList, long, lat, MR, M, overlap=FALSE, alpha=0.05)
+
+### With the Bonferroni correction
+Clusters_ts1B <- Find.Clusters.TS.ST1(yList, XList, long, lat, MR, M, overlap=FALSE, alpha=(0.05/2))
+}

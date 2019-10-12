@@ -32,3 +32,12 @@ list of cluster, coefficient, and indicator of cluster membership.
 Find multiple clusters sequentially via Simulataneous detection.
 Find and test the cluster in the simple linear regression for given potential centroids via the 2nd stage in Two-stage detection: the same slope but different intercept.
 }
+\examples{
+data("SE_FakeData")
+y <- SE_FakeData$y
+X <- cbind(rep(1,length(y)), SE_FakeData$x)
+long <- SE_FakeData$long; lat <- SE_FakeData$lat
+MR <- 300; M <- 2
+Clusters_ts1 <- Find.Clusters.TStg1(y, X, long, lat, MR, M, overlap=TRUE, alpha=0.05)
+Clusters_ts2 <- Find.Clusters.TStg2(y, X, long, lat, MR, M, Clusters_ts1, overlap=TRUE, alpha=0.05)
+}

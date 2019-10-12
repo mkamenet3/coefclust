@@ -31,3 +31,11 @@ Find multiple clusters sequentially via simulataneous detection.
 Find and test the cluster in the simple linear regression for given potential centroids via
 the 1st stage in Two-stage detection: different slope and different intercept.
 }
+\examples{
+data("SE_FakeData")
+y <- SE_FakeData$y
+X <- cbind(rep(1,length(y)), SE_FakeData$x)
+long <- SE_FakeData$long; lat <- SE_FakeData$lat
+MR <- 300; M <- 2
+Clusters_ts1 <- Find.Clusters.TStg1(y, X, long, lat, MR, M, overlap=TRUE, alpha=0.05)
+}
