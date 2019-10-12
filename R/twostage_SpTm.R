@@ -208,7 +208,21 @@ Test.MLC.TS.ID.ST2 <- function(yList, XList, long, lat, cdataL, M, ID, overlap) 
 #'@param alpha Significance level
 #'@return List of clusters, coefficients, and indicator of cluster membership.
 #'@export
+#'@examples
+#'@examples
+#'data("SE_FakeData_SpTm")
+#'long <- SE_FakeData_SpTm$long; lat <- SE_FakeData_SpTm$lat
+#'yList <-list()
+#'yList[[1]] <- SE_FakeData_SpTm$y1; yList[[2]] <- SE_FakeData_SpTm$y2; yList[[3]] <- SE_FakeData_SpTm$y3
+#'XList <-list()
+#'XList[[1]] <- cbind(rep(1,length(long)), SE_FakeData_SpTm$x1); XList[[2]] <- cbind(rep(1,length(long)), SE_FakeData_SpTm$x2); XList[[3]] <- cbind(rep(1,length(long)), SE_FakeData_SpTm$x3)
+#'MR <- 300; M <- 2
+#'Clusters_ts1N <- Find.Clusters.TS.ST1(yList, XList, long, lat, MR, M, overlap=FALSE, alpha=0.05)
+#'Clusters_ts2N <- Find.Clusters.TS.ST2(yList, XList, long, lat, MR, M, Cls1st=Clusters_ts1N, overlap=FALSE, alpha=0.05)
 #'
+#'### With the Bonferroni correction
+#'Clusters_ts1B <- Find.Clusters.TS.ST1(yList, XList, long, lat, MR, M, overlap=FALSE, alpha=(0.05/2))
+#'Clusters_ts2B <- Find.Clusters.TS.ST2(yList, XList, long, lat, MR, M, Cls1st=Clusters_ts1B, overlap=FALSE, alpha=(0.05/2))
 Find.Clusters.TS.ST2 <- function(yList, XList, long, lat, MR, M, Cls1st, overlap, alpha) {
   N <- dim(XList[[1]])[1]; p <- dim(XList[[1]])[2]
   Time <- length(XList)
@@ -313,7 +327,18 @@ Find.Clusters.TS.ST2 <- function(yList, XList, long, lat, MR, M, Cls1st, overlap
 #'@param Cls1st Output from \code{Find.Clusters.TS.ST1()} function in the 1st Stage.
 #'@param Cls2nd Output from \code{Find.Clusters.TS.ST2()} function in the 2nd Stage.
 #'@export
+#'@examples
+#'data("SE_FakeData_SpTm")
+#'long <- SE_FakeData_SpTm$long; lat <- SE_FakeData_SpTm$lat
+#'yList <-list()
+#'yList[[1]] <- SE_FakeData_SpTm$y1; yList[[2]] <- SE_FakeData_SpTm$y2; yList[[3]] <- SE_FakeData_SpTm$y3
+#'XList <-list()
+#'XList[[1]] <- cbind(rep(1,length(long)), SE_FakeData_SpTm$x1); XList[[2]] <- cbind(rep(1,length(long)), SE_FakeData_SpTm$x2); XList[[3]] <- cbind(rep(1,length(long)), SE_FakeData_SpTm$x3)
+#'MR <- 300; M <- 2
+#'Clusters_ts1N <- Find.Clusters.TS.ST1(yList, XList, long, lat, MR, M, overlap=FALSE, alpha=0.05)
 #'
+#'### With the Bonferroni correction
+#'Clusters_ts1B <- Find.Clusters.TS.ST1(yList, XList, long, lat, MR, M, overlap=FALSE, alpha=(0.05/2))
 Fit.Model.Clusters.TS.ST <- function(yList, XList, Cls1st, Cls2nd) {
   WList <- XList
   clsL <- Cls2nd$Indicator
