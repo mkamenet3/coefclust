@@ -58,6 +58,13 @@ Test.Cluster.Simul.SL <- function(y, X, cdataL, M, ID, overlap) {
 #'@param alpha significance level
 #'@return list of cluster, coefficient, and indicator of cluster membership.
 #'@export
+#'@examples
+#'data("SE_FakeData")
+#'y <- SE_FakeData$y
+#'X <- cbind(rep(1,length(y)), SE_FakeData$x)
+#'long <- SE_FakeData$long; lat <- SE_FakeData$lat
+#'MR <- 300; M <- 2
+#'Clusters_sim <- Find.Clusters.Simul(y, X, long, lat, MR, M, overlap=TRUE, alpha=0.05)
 Find.Clusters.Simul <- function(y, X, long, lat, MR, M, overlap, alpha) {
   ID <- 1:length(y)
   N <- dim(X)[1]; p <- dim(X)[2]
