@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Junho Lee, Maria Kamenetsky" />
+
+
+<title>Spatio-Temporal Analysis Using coefclust</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Spatio-Temporal Analysis Using coefclust</h1>
+<h4 class="author"><em>Junho Lee, Maria Kamenetsky</em></h4>
+
+
+
+<div id="set-up" class="section level2">
+<h2>Set-Up</h2>
+<p>First, load the <code>coefclust</code> package.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
+<span class="kw">library</span>(coefclust)</code></pre></div>
+<p>Load in the toy dataset for the spatio-temporal analysis that comes from the package, <em>SE_FakeData_SpTM</em>. Explore the dataset using the <code>str()</code> function:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;SE_FakeData_SpTm&quot;</span>)
+<span class="kw">str</span>(SE_FakeData_SpTm)</code></pre></div>
+<pre><code>## 'data.frame':    616 obs. of  11 variables:
+##  $ State : Factor w/ 7 levels &quot;Alabama&quot;,&quot;Florida&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ County: Factor w/ 438 levels &quot;Abbeville&quot;,&quot;Adams&quot;,..: 17 21 24 36 40 51 54 58 69 77 ...
+##  $ FIPS  : int  1001 1003 1005 1007 1009 1011 1013 1015 1017 1019 ...
+##  $ long  : num  -86.6 -87.7 -85.4 -87.1 -86.6 ...
+##  $ lat   : num  32.5 30.7 31.9 33 34 ...
+##  $ x1    : num  -1.692 0.407 -3.864 7.074 3.073 ...
+##  $ x2    : num  -2.141 -0.0214 -4.3699 5.7659 3.4897 ...
+##  $ x3    : num  -3.213 0.759 -2.858 5.157 0.564 ...
+##  $ y1    : num  -1.824 0.567 -0.144 16.095 -0.67 ...
+##  $ y2    : num  -2.044 -0.212 -0.81 16.156 -1.007 ...
+##  $ y3    : num  2.489 1.072 -0.161 1.858 1.154 ...</code></pre>
+<p>This dataset has 11 variables: <em>State</em>, <em>County</em>, <em>FIPS</em> code (as an integer value), <em>long</em> (longitude of the centroid for each county), <em>lat</em> (latitude of the centroid for each county), 3 covariates (<em>x1</em>, <em>x2</em>, <em>x3</em>), and three responses (<em>y1</em>, <em>y2</em>, <em>y2</em>).</p>
+<p>Next, we extract the longitude and latitude into separate objects, <code>long</code> and <code>lat</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">long &lt;-<span class="st"> </span>SE_FakeData_SpTm<span class="op">$</span>long; lat &lt;-<span class="st"> </span>SE_FakeData_SpTm<span class="op">$</span>lat</code></pre></div>
+<p>We must first prepare the data into lists. First we prepare the list <code>yList</code>, where each element of the list will contain a single series of the three responses:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">yList &lt;-<span class="kw">list</span>()
+yList[[<span class="dv">1</span>]] &lt;-<span class="st"> </span>SE_FakeData_SpTm<span class="op">$</span>y1
+yList[[<span class="dv">2</span>]] &lt;-<span class="st"> </span>SE_FakeData_SpTm<span class="op">$</span>y2
+yList[[<span class="dv">3</span>]] &lt;-<span class="st"> </span>SE_FakeData_SpTm<span class="op">$</span>y3
+<span class="kw">str</span>(yList)</code></pre></div>
+<pre><code>## List of 3
+##  $ : num [1:616] -1.824 0.567 -0.144 16.095 -0.67 ...
+##  $ : num [1:616] -2.044 -0.212 -0.81 16.156 -1.007 ...
+##  $ : num [1:616] 2.489 1.072 -0.161 1.858 1.154 ...</code></pre>
+<p>Next, we prepare the list <code>XList</code>. Each element of <code>XList</code> will have two columns. The first vector is 1 repeated the length of the number of observations. This first column corresponds to the intercept, <span class="math inline">\(\beta_0\)</span>. The second column corresponds to the <code>x</code> covariate.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">XList &lt;-<span class="kw">list</span>()
+XList[[<span class="dv">1</span>]] &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">rep</span>(<span class="dv">1</span>,<span class="kw">length</span>(long)), SE_FakeData_SpTm<span class="op">$</span>x1)
+XList[[<span class="dv">2</span>]] &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">rep</span>(<span class="dv">1</span>,<span class="kw">length</span>(long)), SE_FakeData_SpTm<span class="op">$</span>x2)
+XList[[<span class="dv">3</span>]] &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">rep</span>(<span class="dv">1</span>,<span class="kw">length</span>(long)), SE_FakeData_SpTm<span class="op">$</span>x3)
+<span class="kw">str</span>(XList)</code></pre></div>
+<pre><code>## List of 3
+##  $ : num [1:616, 1:2] 1 1 1 1 1 1 1 1 1 1 ...
+##  $ : num [1:616, 1:2] 1 1 1 1 1 1 1 1 1 1 ...
+##  $ : num [1:616, 1:2] 1 1 1 1 1 1 1 1 1 1 ...</code></pre>
+<p>We start by setting the maximum radius (<code>MR</code>) to 300 and the number of simulation (<code>M</code>) to 2. In a full simulation, we recommend setting <code>M=1000</code>, but have only set it to 2 here for illustration:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MR &lt;-<span class="st"> </span><span class="dv">300</span>
+M &lt;-<span class="st"> </span><span class="dv">2</span></code></pre></div>
+</div>
+<div id="detectiong-multiple-clusters-sequentially-using-simultaneous-detection" class="section level2">
+<h2>Detectiong Multiple Clusters Sequentially Using Simultaneous Detection</h2>
+<p>We use the function <code>Find.Clusters.SI.ST()</code> for detectiong multiple clusters sequentially using simultaneous detection. This function will take the list of responses we created (<code>yList</code>) as the first argument and the list of covariates (<code>XList</code>) as the second argument. The lists of resposnes and covariates are followed by the longitude coordinate, latitude coordinate, the maximum radius for potential clusters <code>MR</code>, the number of simulations <code>M</code>, we set <code>overlap=FALSE</code> to not allow for overlapping clusters, and set <code>alpha=0.05</code> as the Type I error rate:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Find Multiple Clusters Sequentially via the Simulatneous Detection </span>
+Clusters_simST &lt;-<span class="st"> </span><span class="kw">Find.Clusters.SI.ST</span>(yList, XList, long, lat, MR, M, <span class="dt">overlap=</span><span class="ot">FALSE</span>, <span class="dt">alpha=</span><span class="fl">0.05</span>)
+<span class="kw">str</span>(Clusters_simST)</code></pre></div>
+<pre><code>## List of 3
+##  $ Clusters : num [1, 1:5] 11 92.8697 0.3333 0.0352 16
+##   ..- attr(*, &quot;dimnames&quot;)=List of 2
+##   .. ..$ : NULL
+##   .. ..$ : chr [1:5] &quot;center&quot; &quot;radius&quot; &quot;pval&quot; &quot;elapsed&quot; ...
+##  $ Coef     :List of 2
+##   ..$ Coeff_History:List of 3
+##   .. ..$ : num [1:2, 1] 0.0395 0.062
+##   .. .. ..- attr(*, &quot;dimnames&quot;)=List of 2
+##   .. .. .. ..$ : chr [1:2] &quot;beta_0&quot; &quot;beta_1&quot;
+##   .. .. .. ..$ : chr &quot;0&quot;
+##   .. ..$ : num [1:2, 1] 0.1129 0.0619
+##   .. .. ..- attr(*, &quot;dimnames&quot;)=List of 2
+##   .. .. .. ..$ : chr [1:2] &quot;beta_0&quot; &quot;beta_1&quot;
+##   .. .. .. ..$ : chr &quot;0&quot;
+##   .. ..$ : num [1:2, 1] 0.1091 0.0186
+##   .. .. ..- attr(*, &quot;dimnames&quot;)=List of 2
+##   .. .. .. ..$ : chr [1:2] &quot;beta_0&quot; &quot;beta_1&quot;
+##   .. .. .. ..$ : chr &quot;0&quot;
+##   ..$ Coeff_Table  : num [1:2, 1:3] 0.0395 0.062 0.1129 0.0619 0.1091 ...
+##   .. ..- attr(*, &quot;dimnames&quot;)=List of 2
+##   .. .. ..$ : chr [1:2] &quot;beta_0&quot; &quot;beta_1&quot;
+##   .. .. ..$ : NULL
+##  $ Indicator:List of 1
+##   ..$ : logi [1:616] TRUE FALSE FALSE TRUE FALSE FALSE ...</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Clusters_simST<span class="op">$</span>Clusters</code></pre></div>
+<pre><code>##      center   radius      pval    elapsed n_obs
+## [1,]     11 92.86966 0.3333333 0.03516667    16</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Clusters_simST<span class="op">$</span>Coef</code></pre></div>
+<pre><code>## $Coeff_History
+## $Coeff_History[[1]]
+##                 0
+## beta_0 0.03945850
+## beta_1 0.06195994
+## 
+## $Coeff_History[[2]]
+##                 0
+## beta_0 0.11293727
+## beta_1 0.06194135
+## 
+## $Coeff_History[[3]]
+##                 0
+## beta_0 0.10911750
+## beta_1 0.01859798
+## 
+## 
+## $Coeff_Table
+##              [,1]       [,2]       [,3]
+## beta_0 0.03945850 0.11293727 0.10911750
+## beta_1 0.06195994 0.06194135 0.01859798</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(Clusters_simST<span class="op">$</span>Indicator)</code></pre></div>
+<pre><code>## 
+## FALSE  TRUE 
+##   600    16</code></pre>
+<p>The output is an object <code>Clusters_simST</code> which is a list of 3 elements:</p>
+<ul>
+<li><code>Clusters_simST$Clusters</code> (first element of list): provides the resulting identified cluster, with information about the center ID, radius, p-value for the cluster, elapsed computation time, and number of observations inside the detected cluster.</li>
+<li><code>Clusters_simST$Coef</code> (second element of list): provides estimates for <code>beta_0</code> (intercept) and <code>beta_1</code> (slope) for each time period.</li>
+<li><code>Clusters_simST$Indicator</code> (third element of list): is Boolean vector that is <code>TRUE</code> if the given center is inside the cluster and <code>FALSE</code> if it is not.</li>
+</ul>
+<p>To identify the cluster by it’s county name, we can column bind the information from the <code>SE_FakeData_SpTm</code> dataset with the identified cluster information:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cbind</span>(SE_FakeData_SpTm[Clusters_simST<span class="op">$</span>Clusters[,<span class="dv">1</span>],<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>],Clusters_simST<span class="op">$</span>Clusters)</code></pre></div>
+<pre><code>##      State  County center   radius      pval    elapsed n_obs
+## 11 Alabama Chilton     11 92.86966 0.3333333 0.03516667    16</code></pre>
+</div>
+<div id="detecting-multiple-clusters-sequentially-using-two-stage-detection" class="section level2">
+<h2>Detecting Multiple Clusters Sequentially Using Two-Stage Detection</h2>
+<p>We use the functions <code>Find.Clusters.TS.ST1()</code>, <code>Find.Clusters.TS.ST2()</code> for detectiong multiple clusters sequentially using simultaneous detection. Like the <code>Find.Clusters.SI.ST()</code> function for simultaneous detection above, this function will take the list of responses we created (<code>yList</code>) as the first argument and the list of covariates (<code>XList</code>) as the second argument. The lists of resposnes and covariates are followed by the longitude coordinate, latitude coordinate, the maximum radius for potential clusters <code>MR</code>, the number of simulations <code>M</code>, we set <code>overlap=FALSE</code> to not allow for overlapping clusters, and set <code>alpha=0.05</code> as the Type I error rate.</p>
+<p>The results from the first stage (using <code>Find.Clusters.TS.ST1()</code>) are stored as the object <code>Clusters_ts1N</code>. This is then used as an argument for the function <code>Find.Clusters.TS.ST2()</code> where we specify the clusters identified in the first stage as <code>Cls1st=Clusters_ts1N</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Find Multiple Clusters Sequentially via the Two--Stage Detections</span>
+Clusters_ts1N &lt;-<span class="st"> </span><span class="kw">Find.Clusters.TS.ST1</span>(yList, XList, long, lat, MR, M, <span class="dt">overlap=</span><span class="ot">FALSE</span>, <span class="dt">alpha=</span><span class="fl">0.05</span>)
+Clusters_ts2N &lt;-<span class="st"> </span><span class="kw">Find.Clusters.TS.ST2</span>(yList, XList, long, lat, MR, M, <span class="dt">Cls1st=</span>Clusters_ts1N, <span class="dt">overlap=</span><span class="ot">FALSE</span>, <span class="dt">alpha=</span><span class="fl">0.05</span>)
+
+<span class="co">#Explore the spatio-temporal identified clusters (via two-stage detection)</span>
+<span class="kw">str</span>(Clusters_ts2N)</code></pre></div>
+<pre><code>## List of 3
+##  $ Clusters : num [1, 1:6] 11 88.699 0.333 0.048 15 ...
+##   ..- attr(*, &quot;dimnames&quot;)=List of 2
+##   .. ..$ : NULL
+##   .. ..$ : chr [1:6] &quot;center&quot; &quot;radius&quot; &quot;pval&quot; &quot;elapsed&quot; ...
+##  $ Coef     :List of 2
+##   ..$ Coeff_History:List of 3
+##   .. ..$ : num [1:2, 1] 0.0395 0.062
+##   .. .. ..- attr(*, &quot;dimnames&quot;)=List of 2
+##   .. .. .. ..$ : chr [1:2] &quot;beta_0&quot; &quot;beta_1&quot;
+##   .. .. .. ..$ : chr &quot;0&quot;
+##   .. ..$ : num [1:2, 1] 0.1129 0.0619
+##   .. .. ..- attr(*, &quot;dimnames&quot;)=List of 2
+##   .. .. .. ..$ : chr [1:2] &quot;beta_0&quot; &quot;beta_1&quot;
+##   .. .. .. ..$ : chr &quot;0&quot;
+##   .. ..$ : num [1:2, 1] 0.1091 0.0186
+##   .. .. ..- attr(*, &quot;dimnames&quot;)=List of 2
+##   .. .. .. ..$ : chr [1:2] &quot;beta_0&quot; &quot;beta_1&quot;
+##   .. .. .. ..$ : chr &quot;0&quot;
+##   ..$ Coeff_Table  : num [1:2, 1:3] 0.0395 0.062 0.1129 0.0619 0.1091 ...
+##   .. ..- attr(*, &quot;dimnames&quot;)=List of 2
+##   .. .. ..$ : chr [1:2] &quot;beta_0&quot; &quot;beta_1&quot;
+##   .. .. ..$ : NULL
+##  $ Indicator:List of 1
+##   ..$ : logi [1:616] TRUE FALSE FALSE TRUE FALSE FALSE ...</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Clusters_ts2N<span class="op">$</span>Clusters</code></pre></div>
+<pre><code>##      center   radius      pval elapsed n_obs stage
+## [1,]     11 88.69924 0.3333333   0.048    15     1</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Clusters_ts2N<span class="op">$</span>Coef</code></pre></div>
+<pre><code>## $Coeff_History
+## $Coeff_History[[1]]
+##                 0
+## beta_0 0.03945850
+## beta_1 0.06195994
+## 
+## $Coeff_History[[2]]
+##                 0
+## beta_0 0.11293727
+## beta_1 0.06194135
+## 
+## $Coeff_History[[3]]
+##                 0
+## beta_0 0.10911750
+## beta_1 0.01859798
+## 
+## 
+## $Coeff_Table
+##              [,1]       [,2]       [,3]
+## beta_0 0.03945850 0.11293727 0.10911750
+## beta_1 0.06195994 0.06194135 0.01859798</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(Clusters_ts2N<span class="op">$</span>Indicator)</code></pre></div>
+<pre><code>## 
+## FALSE  TRUE 
+##   592    24</code></pre>
+<p>The final output of the spatio-temporal two-stage detection is stored in the object <code>Clusters_ts2N</code>, which is a list of 3 elements:</p>
+<ul>
+<li><code>Clusters_ts2N$Clusters</code> (first element of list): provides the resulting identified cluster, with information about the center ID, radius, p-value, elapsed computation time, and number of observations in the cluster.</li>
+<li><code>Clusters_ts2N$Coef</code> (second element of list): provides estimates for <code>beta_0</code> (intercept) and <code>beta_1</code> (slope) for each time period.</li>
+<li><code>Clusters_ts2N$Indicator</code> (third element of list): is Boolean vector that is <code>TRUE</code> if the given center is inside the cluster and <code>FALSE</code> if it is not.</li>
+</ul>
+<p>To identify the cluster by it’s county name, we can column bind the information from the <code>SE_FakeData_SpTm</code> dataset with the identified cluster information:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cbind</span>(SE_FakeData_SpTm[Clusters_ts2N<span class="op">$</span>Clusters[,<span class="dv">1</span>],<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>],Clusters_ts2N<span class="op">$</span>Clusters)</code></pre></div>
+<pre><code>##      State  County center   radius      pval elapsed n_obs stage
+## 11 Alabama Chilton     11 88.69924 0.3333333   0.048    15     1</code></pre>
+<div id="bonferroni-correction" class="section level3">
+<h3>Bonferroni Correction</h3>
+<p>In order to adjust for multiple testing across the two stages, the Bonferroni correction can be applied to the p-value associated with the detected cluster. To do so, we specify <code>alpha=(0.05/2)</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">### With the Bonferroni correction
+Clusters_ts1B &lt;-<span class="st"> </span><span class="kw">Find.Clusters.TS.ST1</span>(yList, XList, long, lat, MR, M, <span class="dt">overlap=</span><span class="ot">FALSE</span>, <span class="dt">alpha=</span>(<span class="fl">0.05</span><span class="op">/</span><span class="dv">2</span>))
+Clusters_ts2B &lt;-<span class="st"> </span><span class="kw">Find.Clusters.TS.ST2</span>(yList, XList, long, lat, MR, M, <span class="dt">Cls1st=</span>Clusters_ts1B, <span class="dt">overlap=</span><span class="ot">FALSE</span>, <span class="dt">alpha=</span>(<span class="fl">0.05</span><span class="op">/</span><span class="dv">2</span>))</code></pre></div>
+<p>To identify the cluster by it’s county name, we can column bind the information from the <code>SE_FakeData_SpTm</code> dataset with the identified cluster information:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cbind</span>(SE_FakeData_SpTm[Clusters_ts2B<span class="op">$</span>Clusters[,<span class="dv">1</span>],<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>],Clusters_ts2B<span class="op">$</span>Clusters)</code></pre></div>
+<pre><code>##      State  County center   radius      pval elapsed n_obs stage
+## 11 Alabama Chilton     11 88.69924 0.3333333    0.05    15     1</code></pre>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
