@@ -1,7 +1,7 @@
 # coefclust: Clustered spatio-temporal varying coefficients regression model
 
 This repository contains the `R` package `coefclust` based on "Clustered
-Spatio-Temporal Varying Coefficient Regression Model" (Lee, Kamenetsky, Gangnon, Zhu)
+Spatio-Temporal Varying Coefficient Regression Model" (Lee, Kamenetsky, Gangnon, Zhu). The companion website can be found [here.](https://mkamenet3.github.io/coefclust/)
 
 Code developed by J. Lee. Repository maintained by M.Kamenetsky.
 
