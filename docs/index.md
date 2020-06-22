@@ -30,4 +30,4 @@ Please report any bugs or modifications to issues
 ### Vignettes
 
 1. [Introduction to `coefclust`](coefclust.html)
-2. [Spatio-Temporal Analysis Using `coefclust`](coefclust.html)
+2. [Spatio-Temporal Analysis Using `coefclust`](coefclustST.html)
