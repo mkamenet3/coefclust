@@ -20,4 +20,4 @@ Encoding: UTF-8
 Maintainer: Maria Kamenetsky <maria.kamenetsky@gmail.com>
 BugReports: https://github.com/mkamenet3/coefclust/issues
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0

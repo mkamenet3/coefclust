@@ -10,7 +10,8 @@ List.C.Data <- function(DMatrix,MR) {
   N <- dim(DMatrix)[1]
   for (k in 1:N) {
     dat.k <- data.frame(center=k, id=c(1:N), rad=DMatrix[,k])
-    dat.k1 <- subset(dat.k, rad <= MR)
+    #dat.k1 <- subset(dat.k, rad <= MR)
+    dat.k1 <- with(dat.k, subset(dat.k, rad <= MR))
     dat.k1 <- dat.k1[order(dat.k1$rad, dat.k1$id),]
     cdata[[k]] <- dat.k1
   }

@@ -4,7 +4,8 @@
 \name{SE_FakeData}
 \alias{SE_FakeData}
 \title{South-Eastern United Status - Fake Incidence Counts}
-\format{An object of class "data.frame". Includes the following variables:
+\format{
+An object of class "data.frame". Includes the following variables:
 \itemize{
    \item 1) State - Seven states of South-Eastern United States (Alabama, Florida, Georgia, Mississippi, North Carolina, South Carolina, and Tennessee); factor
    \item 2) FIPS - County-level FIPS codes in South-Eastern United States
@@ -12,7 +13,8 @@
    \item 4) lat - latitude
    \item 5) x - covariate
    \item 6) y - response
-}}
+}
+}
 \usage{
 data(SE_FakeData)
 }

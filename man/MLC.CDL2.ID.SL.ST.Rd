@@ -4,8 +4,19 @@
 \alias{MLC.CDL2.ID.SL.ST}
 \title{MLC.CDL2.ID.SL.ST}
 \usage{
-MLC.CDL2.ID.SL.ST(yList, xList, cdataL, sum_x1L, sum_x2L, cs.xxL.L, ID,
-  overlap, Time, N, p)
+MLC.CDL2.ID.SL.ST(
+  yList,
+  xList,
+  cdataL,
+  sum_x1L,
+  sum_x2L,
+  cs.xxL.L,
+  ID,
+  overlap,
+  Time,
+  N,
+  p
+)
 }
 \arguments{
 \item{yList}{The input data (as a list of vectors).}
