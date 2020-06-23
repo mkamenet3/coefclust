@@ -11,7 +11,7 @@ Please report any bugs or modifications to issues
 
 ## Installation
 
-`R` version 4..2 ("Taking Off Again") was used for initial development.
+`R` version 4.0.2 ("Taking Off Again") was used for initial development.
 
 Required packages include:
 

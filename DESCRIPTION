@@ -4,7 +4,7 @@ Version: 0.1
 Authors@R: c(person("Junho", "Lee", email="email",role = c("aut", "cre")),
             person("Maria", "Kamenetsky", email="maria.kamenetsky@gmail.com",role = "aut"))
 Description: Varying-coefficient regression method for spatial data repeatedly sampled over time, with heterogeneity in regression coefficients across both space and time. 
-Depends: R (>= 3.5)
+Depends: R (>= 4.0)
 Imports:
     geosphere,
     stats,
