@@ -11,12 +11,12 @@ Please report any bugs or modifications to issues
 
 ## Installation
 
-`R` version 3.5.2 ("Eggshell Igloo") was used for initial development.
+`R` version 4.0.2 ("Taking Off Again") was used for initial development.
 
 Required packages include:
 
 - `geosphere` (>=1.5)
-- `Matrix` (>=1.2-15)
+- `Matrix` (>=1.2-18)
 
 
 To download the latest version of `coefclust`:

@@ -98,11 +98,16 @@ Test.MLC.SI.ID.ST <- function(yList, XList, cdataL, M, ID, overlap) {
 #'data("SE_FakeData_SpTm")
 #'long <- SE_FakeData_SpTm$long; lat <- SE_FakeData_SpTm$lat
 #'yList <-list()
-#'yList[[1]] <- SE_FakeData_SpTm$y1; yList[[2]] <- SE_FakeData_SpTm$y2; yList[[3]] <- SE_FakeData_SpTm$y3
+#'yList[[1]] <- SE_FakeData_SpTm$y1
+#'yList[[2]] <- SE_FakeData_SpTm$y2
+#'yList[[3]] <- SE_FakeData_SpTm$y3
 #'XList <-list()
-#'XList[[1]] <- cbind(rep(1,length(long)), SE_FakeData_SpTm$x1); XList[[2]] <- cbind(rep(1,length(long)), SE_FakeData_SpTm$x2); XList[[3]] <- cbind(rep(1,length(long)), SE_FakeData_SpTm$x3)
+#'XList[[1]] <- cbind(rep(1,length(long)), SE_FakeData_SpTm$x1)
+#'XList[[2]] <- cbind(rep(1,length(long)), SE_FakeData_SpTm$x2)
+#'XList[[3]] <- cbind(rep(1,length(long)), SE_FakeData_SpTm$x3)
 #'MR <- 300; M <- 2
-#'Clusters_simST <- Find.Clusters.SI.ST(yList, XList, long, lat, MR, M, overlap=FALSE, alpha=0.05)
+#'Clusters_simST <- Find.Clusters.SI.ST(yList, XList, long, lat,
+#' MR, M, overlap=FALSE, alpha=0.05)
 Find.Clusters.SI.ST <- function(yList, XList, long, lat, MR, M, overlap, alpha) {
   N <- dim(XList[[1]])[1]; p <- dim(XList[[1]])[2]
   Time <- length(XList)

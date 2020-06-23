@@ -3,7 +3,7 @@ title: "Spatio-Temporal Analysis Using coefclust"
 author: "Junho Lee, Maria Kamenetsky"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Introduction to coefclust}
+  %\VignetteIndexEntry{Spatio-Temporal Analysis Using coefclust}
   %\VignetteEngine{knitr::knitr}
   \usepackage[utf8]{inputenc}
 ---

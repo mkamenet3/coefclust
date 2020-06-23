@@ -4,7 +4,8 @@
 \name{SE_FakeData_SpTm}
 \alias{SE_FakeData_SpTm}
 \title{South-Eastern United Status - Fake Incidence Counts across Time and Space}
-\format{An object of class "data.frame". Includes the following variables:
+\format{
+An object of class "data.frame". Includes the following variables:
 \itemize{
    \item 1) State - Seven states of South-Eastern United States (Alabama, Florida, Georgia, Mississippi, North Carolina, South Carolina, and Tennessee); factor
    \item 2) FIPS - County-level FIPS codes in South-Eastern United States
@@ -12,7 +13,8 @@
    \item 4) lat - latitude
    \item 5) x1-x3 - covariates
    \item 6) y1-y3 - responses across three time periods
-}}
+}
+}
 \usage{
 data(SE_FakeData_SpTm)
 }
